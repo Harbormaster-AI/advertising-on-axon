@@ -100,7 +100,6 @@ public class BillingProfileCommandRestController extends BaseSpringRestControlle
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateBillingProfileCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createBillingProfile( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class BillingProfileCommandRestController extends BaseSpringRestControlle
 		DeleteBillingProfileCommand command = new DeleteBillingProfileCommand( billingProfileId );
 
     	try {
-        	BillingProfileService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted BillingProfile with key " + command.getBillingProfileId() );
         }
         catch( Throwable exc ) {

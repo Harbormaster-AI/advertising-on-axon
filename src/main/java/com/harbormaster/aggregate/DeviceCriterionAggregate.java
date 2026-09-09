@@ -65,7 +65,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateDeviceCriterionEvent</li>
  *      <li>DeleteDeviceCriterionEvent</li>
    *       <li>AssignTargetingProfileToDeviceCriterionEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignTargetingProfileFromDeviceCriterionEvent</li>
    *        </ul>
  *
  * <p>@author Harbormaster Dev Team</p>

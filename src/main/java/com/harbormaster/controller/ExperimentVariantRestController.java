@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/ExperimentVariant")
 public class ExperimentVariantRestController extends BaseSpringRestController {
 
+	public ExperimentVariantRestController( ExperimentVariantService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a ExperimentVariant.  if not key provided, calls create, otherwise calls save
      * @param		ExperimentVariant	experimentVariant
@@ -94,7 +98,7 @@ public class ExperimentVariantRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = ExperimentVariantService.getExperimentVariantInstance().createExperimentVariant( command );
+			completableFuture = service.createExperimentVariant( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class ExperimentVariantRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateExperimentVariantCommand
 			// -----------------------------------------------
-			completableFuture = ExperimentVariantService.getExperimentVariantInstance().updateExperimentVariant(command);;
+			completableFuture = service.updateExperimentVariant(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "ExperimentVariantController:update() - successfully update ExperimentVariant - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class ExperimentVariantRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteExperimentVariantCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	ExperimentVariantService delegate = ExperimentVariantService.getExperimentVariantInstance();
+        	ExperimentVariantService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted ExperimentVariant with key " + command.getExperimentVariantId() );
@@ -155,7 +159,7 @@ public class ExperimentVariantRestController extends BaseSpringRestController {
     	ExperimentVariant entity = null;
 
     	try {  
-    		entity = ExperimentVariantService.getExperimentVariantInstance().getExperimentVariant( new ExperimentVariantFetchOneSummary( uuid ) );   
+    		entity = service.getExperimentVariant( new ExperimentVariantFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load ExperimentVariant using Id " + uuid );
@@ -175,7 +179,7 @@ public class ExperimentVariantRestController extends BaseSpringRestController {
         
     	try {
             // load the ExperimentVariant
-            experimentVariantList = ExperimentVariantService.getExperimentVariantInstance().getAllExperimentVariant();
+            experimentVariantList = service.getAllExperimentVariant();
             
             if ( experimentVariantList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all ExperimentVariants" );
@@ -196,7 +200,7 @@ public class ExperimentVariantRestController extends BaseSpringRestController {
 	@PutMapping("/assignExperiment")
 	public void assignExperiment( @RequestBody AssignExperimentToExperimentVariantCommand command ) {
 		try {
-			ExperimentVariantService.getExperimentVariantInstance().assignExperiment( command );   
+			service.assignExperiment( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Experiment", exc );
@@ -210,7 +214,7 @@ public class ExperimentVariantRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignExperiment")
 	public void unAssignExperiment( @RequestBody(required=true)  UnAssignExperimentFromExperimentVariantCommand command ) {
 		try {
-			ExperimentVariantService.getExperimentVariantInstance().unAssignExperiment( command );   
+			service.unAssignExperiment( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Experiment", exc );
@@ -224,7 +228,7 @@ public class ExperimentVariantRestController extends BaseSpringRestController {
 	@PutMapping("/assignCreativeVariation")
 	public void assignCreativeVariation( @RequestBody AssignCreativeVariationToExperimentVariantCommand command ) {
 		try {
-			ExperimentVariantService.getExperimentVariantInstance().assignCreativeVariation( command );   
+			service.assignCreativeVariation( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign CreativeVariation", exc );
@@ -238,7 +242,7 @@ public class ExperimentVariantRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignCreativeVariation")
 	public void unAssignCreativeVariation( @RequestBody(required=true)  UnAssignCreativeVariationFromExperimentVariantCommand command ) {
 		try {
-			ExperimentVariantService.getExperimentVariantInstance().unAssignCreativeVariation( command );   
+			service.unAssignCreativeVariation( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign CreativeVariation", exc );
@@ -252,7 +256,7 @@ public class ExperimentVariantRestController extends BaseSpringRestController {
 	@PutMapping("/assignLineItem")
 	public void assignLineItem( @RequestBody AssignLineItemToExperimentVariantCommand command ) {
 		try {
-			ExperimentVariantService.getExperimentVariantInstance().assignLineItem( command );   
+			service.assignLineItem( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign LineItem", exc );
@@ -266,7 +270,7 @@ public class ExperimentVariantRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignLineItem")
 	public void unAssignLineItem( @RequestBody(required=true)  UnAssignLineItemFromExperimentVariantCommand command ) {
 		try {
-			ExperimentVariantService.getExperimentVariantInstance().unAssignLineItem( command );   
+			service.unAssignLineItem( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign LineItem", exc );
@@ -281,6 +285,7 @@ public class ExperimentVariantRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected ExperimentVariant experimentVariant = null;
-    private static final Logger LOGGER = Logger.getLogger(ExperimentVariantRestController.class.getName());
+	protected ExperimentVariantService service = null;
+	private static final Logger LOGGER = Logger.getLogger(ExperimentVariantRestController.class.getName());
     
 }

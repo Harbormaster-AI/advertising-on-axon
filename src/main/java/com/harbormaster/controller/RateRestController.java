@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Rate")
 public class RateRestController extends BaseSpringRestController {
 
+	public RateRestController( RateService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a Rate.  if not key provided, calls create, otherwise calls save
      * @param		Rate	rate
@@ -94,7 +98,7 @@ public class RateRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = RateService.getRateInstance().createRate( command );
+			completableFuture = service.createRate( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class RateRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateRateCommand
 			// -----------------------------------------------
-			completableFuture = RateService.getRateInstance().updateRate(command);;
+			completableFuture = service.updateRate(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "RateController:update() - successfully update Rate - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class RateRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteRateCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	RateService delegate = RateService.getRateInstance();
+        	RateService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Rate with key " + command.getRateId() );
@@ -155,7 +159,7 @@ public class RateRestController extends BaseSpringRestController {
     	Rate entity = null;
 
     	try {  
-    		entity = RateService.getRateInstance().getRate( new RateFetchOneSummary( uuid ) );   
+    		entity = service.getRate( new RateFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Rate using Id " + uuid );
@@ -175,7 +179,7 @@ public class RateRestController extends BaseSpringRestController {
         
     	try {
             // load the Rate
-            rateList = RateService.getRateInstance().getAllRate();
+            rateList = service.getAllRate();
             
             if ( rateList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Rates" );
@@ -196,7 +200,7 @@ public class RateRestController extends BaseSpringRestController {
 	@PutMapping("/assignRateCard")
 	public void assignRateCard( @RequestBody AssignRateCardToRateCommand command ) {
 		try {
-			RateService.getRateInstance().assignRateCard( command );   
+			service.assignRateCard( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign RateCard", exc );
@@ -210,7 +214,7 @@ public class RateRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignRateCard")
 	public void unAssignRateCard( @RequestBody(required=true)  UnAssignRateCardFromRateCommand command ) {
 		try {
-			RateService.getRateInstance().unAssignRateCard( command );   
+			service.unAssignRateCard( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign RateCard", exc );
@@ -224,7 +228,7 @@ public class RateRestController extends BaseSpringRestController {
 	@PutMapping("/assignAdSlot")
 	public void assignAdSlot( @RequestBody AssignAdSlotToRateCommand command ) {
 		try {
-			RateService.getRateInstance().assignAdSlot( command );   
+			service.assignAdSlot( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign AdSlot", exc );
@@ -238,7 +242,7 @@ public class RateRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAdSlot")
 	public void unAssignAdSlot( @RequestBody(required=true)  UnAssignAdSlotFromRateCommand command ) {
 		try {
-			RateService.getRateInstance().unAssignAdSlot( command );   
+			service.unAssignAdSlot( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign AdSlot", exc );
@@ -253,6 +257,7 @@ public class RateRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Rate rate = null;
-    private static final Logger LOGGER = Logger.getLogger(RateRestController.class.getName());
+	protected RateService service = null;
+	private static final Logger LOGGER = Logger.getLogger(RateRestController.class.getName());
     
 }

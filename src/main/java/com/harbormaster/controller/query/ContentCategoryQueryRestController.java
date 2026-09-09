@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/ContentCategoryQuery")
 public class ContentCategoryQueryRestController extends BaseSpringRestController {
 	
+	public ContentCategoryQueryRestController( ContentCategoryService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a ContentCategory using a UUID
      * @param		UUID contentCategoryId
@@ -95,7 +99,7 @@ public class ContentCategoryQueryRestController extends BaseSpringRestController
     	ContentCategory entity = null;
 
     	try {  
-    		entity = ContentCategoryService.getContentCategoryInstance().getContentCategory( new ContentCategoryFetchOneSummary( contentCategoryId ) );
+    		entity = service.getContentCategory( new ContentCategoryFetchOneSummary( contentCategoryId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load ContentCategory using Id " + contentCategoryId );
@@ -115,7 +119,7 @@ public class ContentCategoryQueryRestController extends BaseSpringRestController
         
     	try {
             // load the ContentCategory
-            contentCategoryList = ContentCategoryService.getContentCategoryInstance().getAllContentCategory();
+            contentCategoryList = service.getAllContentCategory();
             
             if ( contentCategoryList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all ContentCategorys" );
@@ -135,6 +139,7 @@ public class ContentCategoryQueryRestController extends BaseSpringRestController
 // Attributes
 //************************************************************************
     protected ContentCategory contentCategory = null;
+    protected ContentCategoryService service = null;
     private static final Logger LOGGER = Logger.getLogger(ContentCategoryQueryRestController.class.getName());
     
 }

@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/AdvertiserQuery")
 public class AdvertiserQueryRestController extends BaseSpringRestController {
 	
+	public AdvertiserQueryRestController( AdvertiserService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a Advertiser using a UUID
      * @param		UUID advertiserId
@@ -95,7 +99,7 @@ public class AdvertiserQueryRestController extends BaseSpringRestController {
     	Advertiser entity = null;
 
     	try {  
-    		entity = AdvertiserService.getAdvertiserInstance().getAdvertiser( new AdvertiserFetchOneSummary( advertiserId ) );
+    		entity = service.getAdvertiser( new AdvertiserFetchOneSummary( advertiserId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Advertiser using Id " + advertiserId );
@@ -115,7 +119,7 @@ public class AdvertiserQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the Advertiser
-            advertiserList = AdvertiserService.getAdvertiserInstance().getAllAdvertiser();
+            advertiserList = service.getAllAdvertiser();
             
             if ( advertiserList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Advertisers" );
@@ -135,6 +139,7 @@ public class AdvertiserQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Advertiser advertiser = null;
+    protected AdvertiserService service = null;
     private static final Logger LOGGER = Logger.getLogger(AdvertiserQueryRestController.class.getName());
     
 }

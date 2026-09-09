@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/CreativeFile")
 public class CreativeFileRestController extends BaseSpringRestController {
 
+	public CreativeFileRestController( CreativeFileService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a CreativeFile.  if not key provided, calls create, otherwise calls save
      * @param		CreativeFile	creativeFile
@@ -94,7 +98,7 @@ public class CreativeFileRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = CreativeFileService.getCreativeFileInstance().createCreativeFile( command );
+			completableFuture = service.createCreativeFile( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class CreativeFileRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateCreativeFileCommand
 			// -----------------------------------------------
-			completableFuture = CreativeFileService.getCreativeFileInstance().updateCreativeFile(command);;
+			completableFuture = service.updateCreativeFile(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "CreativeFileController:update() - successfully update CreativeFile - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class CreativeFileRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteCreativeFileCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	CreativeFileService delegate = CreativeFileService.getCreativeFileInstance();
+        	CreativeFileService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted CreativeFile with key " + command.getCreativeFileId() );
@@ -155,7 +159,7 @@ public class CreativeFileRestController extends BaseSpringRestController {
     	CreativeFile entity = null;
 
     	try {  
-    		entity = CreativeFileService.getCreativeFileInstance().getCreativeFile( new CreativeFileFetchOneSummary( uuid ) );   
+    		entity = service.getCreativeFile( new CreativeFileFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load CreativeFile using Id " + uuid );
@@ -175,7 +179,7 @@ public class CreativeFileRestController extends BaseSpringRestController {
         
     	try {
             // load the CreativeFile
-            creativeFileList = CreativeFileService.getCreativeFileInstance().getAllCreativeFile();
+            creativeFileList = service.getAllCreativeFile();
             
             if ( creativeFileList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all CreativeFiles" );
@@ -196,7 +200,7 @@ public class CreativeFileRestController extends BaseSpringRestController {
 	@PutMapping("/assignCreativeAsset")
 	public void assignCreativeAsset( @RequestBody AssignCreativeAssetToCreativeFileCommand command ) {
 		try {
-			CreativeFileService.getCreativeFileInstance().assignCreativeAsset( command );   
+			service.assignCreativeAsset( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign CreativeAsset", exc );
@@ -210,7 +214,7 @@ public class CreativeFileRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignCreativeAsset")
 	public void unAssignCreativeAsset( @RequestBody(required=true)  UnAssignCreativeAssetFromCreativeFileCommand command ) {
 		try {
-			CreativeFileService.getCreativeFileInstance().unAssignCreativeAsset( command );   
+			service.unAssignCreativeAsset( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign CreativeAsset", exc );
@@ -225,6 +229,7 @@ public class CreativeFileRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected CreativeFile creativeFile = null;
-    private static final Logger LOGGER = Logger.getLogger(CreativeFileRestController.class.getName());
+	protected CreativeFileService service = null;
+	private static final Logger LOGGER = Logger.getLogger(CreativeFileRestController.class.getName());
     
 }

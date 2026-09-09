@@ -93,7 +93,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateAdvertiserEvent</li>
  *      <li>DeleteAdvertiserEvent</li>
    *       <li>AssignAgencyToAdvertiserEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignAgencyFromAdvertiserEvent</li>
    *       <li>AssignAdAccountsToAdvertiserEvent</li>
  *       <li>RemoveAdAccountsFromAdvertiserEvent</li>
   *       <li>AssignBillingProfilesToAdvertiserEvent</li>

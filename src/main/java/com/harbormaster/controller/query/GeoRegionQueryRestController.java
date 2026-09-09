@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/GeoRegionQuery")
 public class GeoRegionQueryRestController extends BaseSpringRestController {
 	
+	public GeoRegionQueryRestController( GeoRegionService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a GeoRegion using a UUID
      * @param		UUID geoRegionId
@@ -95,7 +99,7 @@ public class GeoRegionQueryRestController extends BaseSpringRestController {
     	GeoRegion entity = null;
 
     	try {  
-    		entity = GeoRegionService.getGeoRegionInstance().getGeoRegion( new GeoRegionFetchOneSummary( geoRegionId ) );
+    		entity = service.getGeoRegion( new GeoRegionFetchOneSummary( geoRegionId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load GeoRegion using Id " + geoRegionId );
@@ -115,7 +119,7 @@ public class GeoRegionQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the GeoRegion
-            geoRegionList = GeoRegionService.getGeoRegionInstance().getAllGeoRegion();
+            geoRegionList = service.getAllGeoRegion();
             
             if ( geoRegionList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all GeoRegions" );
@@ -135,6 +139,7 @@ public class GeoRegionQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected GeoRegion geoRegion = null;
+    protected GeoRegionService service = null;
     private static final Logger LOGGER = Logger.getLogger(GeoRegionQueryRestController.class.getName());
     
 }

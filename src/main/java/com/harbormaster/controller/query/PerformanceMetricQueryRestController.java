@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/PerformanceMetricQuery")
 public class PerformanceMetricQueryRestController extends BaseSpringRestController {
 	
+	public PerformanceMetricQueryRestController( PerformanceMetricService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a PerformanceMetric using a UUID
      * @param		UUID performanceMetricId
@@ -95,7 +99,7 @@ public class PerformanceMetricQueryRestController extends BaseSpringRestControll
     	PerformanceMetric entity = null;
 
     	try {  
-    		entity = PerformanceMetricService.getPerformanceMetricInstance().getPerformanceMetric( new PerformanceMetricFetchOneSummary( performanceMetricId ) );
+    		entity = service.getPerformanceMetric( new PerformanceMetricFetchOneSummary( performanceMetricId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load PerformanceMetric using Id " + performanceMetricId );
@@ -115,7 +119,7 @@ public class PerformanceMetricQueryRestController extends BaseSpringRestControll
         
     	try {
             // load the PerformanceMetric
-            performanceMetricList = PerformanceMetricService.getPerformanceMetricInstance().getAllPerformanceMetric();
+            performanceMetricList = service.getAllPerformanceMetric();
             
             if ( performanceMetricList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all PerformanceMetrics" );
@@ -135,6 +139,7 @@ public class PerformanceMetricQueryRestController extends BaseSpringRestControll
 // Attributes
 //************************************************************************
     protected PerformanceMetric performanceMetric = null;
+    protected PerformanceMetricService service = null;
     private static final Logger LOGGER = Logger.getLogger(PerformanceMetricQueryRestController.class.getName());
     
 }

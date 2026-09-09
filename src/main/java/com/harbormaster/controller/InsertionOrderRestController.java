@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/InsertionOrder")
 public class InsertionOrderRestController extends BaseSpringRestController {
 
+	public InsertionOrderRestController( InsertionOrderService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a InsertionOrder.  if not key provided, calls create, otherwise calls save
      * @param		InsertionOrder	insertionOrder
@@ -94,7 +98,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = InsertionOrderService.getInsertionOrderInstance().createInsertionOrder( command );
+			completableFuture = service.createInsertionOrder( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateInsertionOrderCommand
 			// -----------------------------------------------
-			completableFuture = InsertionOrderService.getInsertionOrderInstance().updateInsertionOrder(command);;
+			completableFuture = service.updateInsertionOrder(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "InsertionOrderController:update() - successfully update InsertionOrder - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteInsertionOrderCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	InsertionOrderService delegate = InsertionOrderService.getInsertionOrderInstance();
+        	InsertionOrderService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted InsertionOrder with key " + command.getInsertionOrderId() );
@@ -155,7 +159,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
     	InsertionOrder entity = null;
 
     	try {  
-    		entity = InsertionOrderService.getInsertionOrderInstance().getInsertionOrder( new InsertionOrderFetchOneSummary( uuid ) );   
+    		entity = service.getInsertionOrder( new InsertionOrderFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load InsertionOrder using Id " + uuid );
@@ -175,7 +179,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
         
     	try {
             // load the InsertionOrder
-            insertionOrderList = InsertionOrderService.getInsertionOrderInstance().getAllInsertionOrder();
+            insertionOrderList = service.getAllInsertionOrder();
             
             if ( insertionOrderList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all InsertionOrders" );
@@ -196,7 +200,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
 	@PutMapping("/assignAdvertiser")
 	public void assignAdvertiser( @RequestBody AssignAdvertiserToInsertionOrderCommand command ) {
 		try {
-			InsertionOrderService.getInsertionOrderInstance().assignAdvertiser( command );   
+			service.assignAdvertiser( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Advertiser", exc );
@@ -210,7 +214,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAdvertiser")
 	public void unAssignAdvertiser( @RequestBody(required=true)  UnAssignAdvertiserFromInsertionOrderCommand command ) {
 		try {
-			InsertionOrderService.getInsertionOrderInstance().unAssignAdvertiser( command );   
+			service.unAssignAdvertiser( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Advertiser", exc );
@@ -224,7 +228,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
 	@PutMapping("/assignAgency")
 	public void assignAgency( @RequestBody AssignAgencyToInsertionOrderCommand command ) {
 		try {
-			InsertionOrderService.getInsertionOrderInstance().assignAgency( command );   
+			service.assignAgency( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Agency", exc );
@@ -238,7 +242,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAgency")
 	public void unAssignAgency( @RequestBody(required=true)  UnAssignAgencyFromInsertionOrderCommand command ) {
 		try {
-			InsertionOrderService.getInsertionOrderInstance().unAssignAgency( command );   
+			service.unAssignAgency( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Agency", exc );
@@ -252,7 +256,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
 	@PutMapping("/assignPublisher")
 	public void assignPublisher( @RequestBody AssignPublisherToInsertionOrderCommand command ) {
 		try {
-			InsertionOrderService.getInsertionOrderInstance().assignPublisher( command );   
+			service.assignPublisher( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Publisher", exc );
@@ -266,7 +270,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignPublisher")
 	public void unAssignPublisher( @RequestBody(required=true)  UnAssignPublisherFromInsertionOrderCommand command ) {
 		try {
-			InsertionOrderService.getInsertionOrderInstance().unAssignPublisher( command );   
+			service.unAssignPublisher( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Publisher", exc );
@@ -281,7 +285,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
 	@PutMapping("/addToCampaigns")
 	public void addToCampaigns( @RequestBody(required=true) AssignCampaignsToInsertionOrderCommand command ) {
 		try {
-			InsertionOrderService.getInsertionOrderInstance().addToCampaigns( command );   
+			service.addToCampaigns( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Campaigns", exc );
@@ -296,7 +300,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
 	public void removeFromCampaigns( 	@RequestBody(required=true) RemoveCampaignsFromInsertionOrderCommand command )
 	{		
 		try {
-			InsertionOrderService.getInsertionOrderInstance().removeFromCampaigns( command );
+			service.removeFromCampaigns( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Campaigns", exc );
@@ -310,6 +314,7 @@ public class InsertionOrderRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected InsertionOrder insertionOrder = null;
-    private static final Logger LOGGER = Logger.getLogger(InsertionOrderRestController.class.getName());
+	protected InsertionOrderService service = null;
+	private static final Logger LOGGER = Logger.getLogger(InsertionOrderRestController.class.getName());
     
 }

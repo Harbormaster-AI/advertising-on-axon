@@ -100,7 +100,6 @@ public class AdvertiserCommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateAdvertiserCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createAdvertiser( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class AdvertiserCommandRestController extends BaseSpringRestController {
 		DeleteAdvertiserCommand command = new DeleteAdvertiserCommand( advertiserId );
 
     	try {
-        	AdvertiserService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Advertiser with key " + command.getAdvertiserId() );
         }
         catch( Throwable exc ) {

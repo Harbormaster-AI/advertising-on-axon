@@ -100,7 +100,6 @@ public class PaymentMethodCommandRestController extends BaseSpringRestController
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreatePaymentMethodCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createPaymentMethod( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class PaymentMethodCommandRestController extends BaseSpringRestController
 		DeletePaymentMethodCommand command = new DeletePaymentMethodCommand( paymentMethodId );
 
     	try {
-        	PaymentMethodService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted PaymentMethod with key " + command.getPaymentMethodId() );
         }
         catch( Throwable exc ) {

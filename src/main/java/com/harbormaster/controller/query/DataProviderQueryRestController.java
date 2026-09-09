@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/DataProviderQuery")
 public class DataProviderQueryRestController extends BaseSpringRestController {
 	
+	public DataProviderQueryRestController( DataProviderService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a DataProvider using a UUID
      * @param		UUID dataProviderId
@@ -95,7 +99,7 @@ public class DataProviderQueryRestController extends BaseSpringRestController {
     	DataProvider entity = null;
 
     	try {  
-    		entity = DataProviderService.getDataProviderInstance().getDataProvider( new DataProviderFetchOneSummary( dataProviderId ) );
+    		entity = service.getDataProvider( new DataProviderFetchOneSummary( dataProviderId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load DataProvider using Id " + dataProviderId );
@@ -115,7 +119,7 @@ public class DataProviderQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the DataProvider
-            dataProviderList = DataProviderService.getDataProviderInstance().getAllDataProvider();
+            dataProviderList = service.getAllDataProvider();
             
             if ( dataProviderList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all DataProviders" );
@@ -135,6 +139,7 @@ public class DataProviderQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected DataProvider dataProvider = null;
+    protected DataProviderService service = null;
     private static final Logger LOGGER = Logger.getLogger(DataProviderQueryRestController.class.getName());
     
 }

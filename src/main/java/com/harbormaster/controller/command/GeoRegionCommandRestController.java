@@ -100,7 +100,6 @@ public class GeoRegionCommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateGeoRegionCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createGeoRegion( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class GeoRegionCommandRestController extends BaseSpringRestController {
 		DeleteGeoRegionCommand command = new DeleteGeoRegionCommand( geoRegionId );
 
     	try {
-        	GeoRegionService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted GeoRegion with key " + command.getGeoRegionId() );
         }
         catch( Throwable exc ) {

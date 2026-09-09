@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/TrackingPixel")
 public class TrackingPixelRestController extends BaseSpringRestController {
 
+	public TrackingPixelRestController( TrackingPixelService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a TrackingPixel.  if not key provided, calls create, otherwise calls save
      * @param		TrackingPixel	trackingPixel
@@ -94,7 +98,7 @@ public class TrackingPixelRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = TrackingPixelService.getTrackingPixelInstance().createTrackingPixel( command );
+			completableFuture = service.createTrackingPixel( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class TrackingPixelRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateTrackingPixelCommand
 			// -----------------------------------------------
-			completableFuture = TrackingPixelService.getTrackingPixelInstance().updateTrackingPixel(command);;
+			completableFuture = service.updateTrackingPixel(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "TrackingPixelController:update() - successfully update TrackingPixel - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class TrackingPixelRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteTrackingPixelCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	TrackingPixelService delegate = TrackingPixelService.getTrackingPixelInstance();
+        	TrackingPixelService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted TrackingPixel with key " + command.getTrackingPixelId() );
@@ -155,7 +159,7 @@ public class TrackingPixelRestController extends BaseSpringRestController {
     	TrackingPixel entity = null;
 
     	try {  
-    		entity = TrackingPixelService.getTrackingPixelInstance().getTrackingPixel( new TrackingPixelFetchOneSummary( uuid ) );   
+    		entity = service.getTrackingPixel( new TrackingPixelFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load TrackingPixel using Id " + uuid );
@@ -175,7 +179,7 @@ public class TrackingPixelRestController extends BaseSpringRestController {
         
     	try {
             // load the TrackingPixel
-            trackingPixelList = TrackingPixelService.getTrackingPixelInstance().getAllTrackingPixel();
+            trackingPixelList = service.getAllTrackingPixel();
             
             if ( trackingPixelList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all TrackingPixels" );
@@ -196,7 +200,7 @@ public class TrackingPixelRestController extends BaseSpringRestController {
 	@PutMapping("/assignCampaign")
 	public void assignCampaign( @RequestBody AssignCampaignToTrackingPixelCommand command ) {
 		try {
-			TrackingPixelService.getTrackingPixelInstance().assignCampaign( command );   
+			service.assignCampaign( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Campaign", exc );
@@ -210,7 +214,7 @@ public class TrackingPixelRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignCampaign")
 	public void unAssignCampaign( @RequestBody(required=true)  UnAssignCampaignFromTrackingPixelCommand command ) {
 		try {
-			TrackingPixelService.getTrackingPixelInstance().unAssignCampaign( command );   
+			service.unAssignCampaign( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Campaign", exc );
@@ -224,7 +228,7 @@ public class TrackingPixelRestController extends BaseSpringRestController {
 	@PutMapping("/assignAdvertiser")
 	public void assignAdvertiser( @RequestBody AssignAdvertiserToTrackingPixelCommand command ) {
 		try {
-			TrackingPixelService.getTrackingPixelInstance().assignAdvertiser( command );   
+			service.assignAdvertiser( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Advertiser", exc );
@@ -238,7 +242,7 @@ public class TrackingPixelRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAdvertiser")
 	public void unAssignAdvertiser( @RequestBody(required=true)  UnAssignAdvertiserFromTrackingPixelCommand command ) {
 		try {
-			TrackingPixelService.getTrackingPixelInstance().unAssignAdvertiser( command );   
+			service.unAssignAdvertiser( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Advertiser", exc );
@@ -253,7 +257,7 @@ public class TrackingPixelRestController extends BaseSpringRestController {
 	@PutMapping("/addToConversionEvents")
 	public void addToConversionEvents( @RequestBody(required=true) AssignConversionEventsToTrackingPixelCommand command ) {
 		try {
-			TrackingPixelService.getTrackingPixelInstance().addToConversionEvents( command );   
+			service.addToConversionEvents( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set ConversionEvents", exc );
@@ -268,7 +272,7 @@ public class TrackingPixelRestController extends BaseSpringRestController {
 	public void removeFromConversionEvents( 	@RequestBody(required=true) RemoveConversionEventsFromTrackingPixelCommand command )
 	{		
 		try {
-			TrackingPixelService.getTrackingPixelInstance().removeFromConversionEvents( command );
+			service.removeFromConversionEvents( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set ConversionEvents", exc );
@@ -282,6 +286,7 @@ public class TrackingPixelRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected TrackingPixel trackingPixel = null;
-    private static final Logger LOGGER = Logger.getLogger(TrackingPixelRestController.class.getName());
+	protected TrackingPixelService service = null;
+	private static final Logger LOGGER = Logger.getLogger(TrackingPixelRestController.class.getName());
     
 }

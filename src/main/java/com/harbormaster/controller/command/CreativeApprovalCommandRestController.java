@@ -100,7 +100,6 @@ public class CreativeApprovalCommandRestController extends BaseSpringRestControl
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateCreativeApprovalCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createCreativeApproval( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class CreativeApprovalCommandRestController extends BaseSpringRestControl
 		DeleteCreativeApprovalCommand command = new DeleteCreativeApprovalCommand( creativeApprovalId );
 
     	try {
-        	CreativeApprovalService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted CreativeApproval with key " + command.getCreativeApprovalId() );
         }
         catch( Throwable exc ) {

@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Campaign")
 public class CampaignRestController extends BaseSpringRestController {
 
+	public CampaignRestController( CampaignService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a Campaign.  if not key provided, calls create, otherwise calls save
      * @param		Campaign	campaign
@@ -94,7 +98,7 @@ public class CampaignRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = CampaignService.getCampaignInstance().createCampaign( command );
+			completableFuture = service.createCampaign( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class CampaignRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateCampaignCommand
 			// -----------------------------------------------
-			completableFuture = CampaignService.getCampaignInstance().updateCampaign(command);;
+			completableFuture = service.updateCampaign(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "CampaignController:update() - successfully update Campaign - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class CampaignRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteCampaignCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	CampaignService delegate = CampaignService.getCampaignInstance();
+        	CampaignService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Campaign with key " + command.getCampaignId() );
@@ -155,7 +159,7 @@ public class CampaignRestController extends BaseSpringRestController {
     	Campaign entity = null;
 
     	try {  
-    		entity = CampaignService.getCampaignInstance().getCampaign( new CampaignFetchOneSummary( uuid ) );   
+    		entity = service.getCampaign( new CampaignFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Campaign using Id " + uuid );
@@ -175,7 +179,7 @@ public class CampaignRestController extends BaseSpringRestController {
         
     	try {
             // load the Campaign
-            campaignList = CampaignService.getCampaignInstance().getAllCampaign();
+            campaignList = service.getAllCampaign();
             
             if ( campaignList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Campaigns" );
@@ -196,7 +200,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	@PutMapping("/assignAdAccount")
 	public void assignAdAccount( @RequestBody AssignAdAccountToCampaignCommand command ) {
 		try {
-			CampaignService.getCampaignInstance().assignAdAccount( command );   
+			service.assignAdAccount( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign AdAccount", exc );
@@ -210,7 +214,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAdAccount")
 	public void unAssignAdAccount( @RequestBody(required=true)  UnAssignAdAccountFromCampaignCommand command ) {
 		try {
-			CampaignService.getCampaignInstance().unAssignAdAccount( command );   
+			service.unAssignAdAccount( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign AdAccount", exc );
@@ -224,7 +228,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	@PutMapping("/assignInsertionOrder")
 	public void assignInsertionOrder( @RequestBody AssignInsertionOrderToCampaignCommand command ) {
 		try {
-			CampaignService.getCampaignInstance().assignInsertionOrder( command );   
+			service.assignInsertionOrder( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign InsertionOrder", exc );
@@ -238,7 +242,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignInsertionOrder")
 	public void unAssignInsertionOrder( @RequestBody(required=true)  UnAssignInsertionOrderFromCampaignCommand command ) {
 		try {
-			CampaignService.getCampaignInstance().unAssignInsertionOrder( command );   
+			service.unAssignInsertionOrder( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign InsertionOrder", exc );
@@ -253,7 +257,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	@PutMapping("/addToLineItems")
 	public void addToLineItems( @RequestBody(required=true) AssignLineItemsToCampaignCommand command ) {
 		try {
-			CampaignService.getCampaignInstance().addToLineItems( command );   
+			service.addToLineItems( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set LineItems", exc );
@@ -268,7 +272,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	public void removeFromLineItems( 	@RequestBody(required=true) RemoveLineItemsFromCampaignCommand command )
 	{		
 		try {
-			CampaignService.getCampaignInstance().removeFromLineItems( command );
+			service.removeFromLineItems( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set LineItems", exc );
@@ -282,7 +286,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	@PutMapping("/addToKpis")
 	public void addToKpis( @RequestBody(required=true) AssignKpisToCampaignCommand command ) {
 		try {
-			CampaignService.getCampaignInstance().addToKpis( command );   
+			service.addToKpis( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Kpis", exc );
@@ -297,7 +301,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	public void removeFromKpis( 	@RequestBody(required=true) RemoveKpisFromCampaignCommand command )
 	{		
 		try {
-			CampaignService.getCampaignInstance().removeFromKpis( command );
+			service.removeFromKpis( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Kpis", exc );
@@ -311,7 +315,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	@PutMapping("/addToTrackingPixels")
 	public void addToTrackingPixels( @RequestBody(required=true) AssignTrackingPixelsToCampaignCommand command ) {
 		try {
-			CampaignService.getCampaignInstance().addToTrackingPixels( command );   
+			service.addToTrackingPixels( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set TrackingPixels", exc );
@@ -326,7 +330,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	public void removeFromTrackingPixels( 	@RequestBody(required=true) RemoveTrackingPixelsFromCampaignCommand command )
 	{		
 		try {
-			CampaignService.getCampaignInstance().removeFromTrackingPixels( command );
+			service.removeFromTrackingPixels( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set TrackingPixels", exc );
@@ -340,7 +344,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	@PutMapping("/addToAudiences")
 	public void addToAudiences( @RequestBody(required=true) AssignAudiencesToCampaignCommand command ) {
 		try {
-			CampaignService.getCampaignInstance().addToAudiences( command );   
+			service.addToAudiences( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Audiences", exc );
@@ -355,7 +359,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	public void removeFromAudiences( 	@RequestBody(required=true) RemoveAudiencesFromCampaignCommand command )
 	{		
 		try {
-			CampaignService.getCampaignInstance().removeFromAudiences( command );
+			service.removeFromAudiences( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Audiences", exc );
@@ -369,7 +373,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	@PutMapping("/addToReports")
 	public void addToReports( @RequestBody(required=true) AssignReportsToCampaignCommand command ) {
 		try {
-			CampaignService.getCampaignInstance().addToReports( command );   
+			service.addToReports( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Reports", exc );
@@ -384,7 +388,7 @@ public class CampaignRestController extends BaseSpringRestController {
 	public void removeFromReports( 	@RequestBody(required=true) RemoveReportsFromCampaignCommand command )
 	{		
 		try {
-			CampaignService.getCampaignInstance().removeFromReports( command );
+			service.removeFromReports( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Reports", exc );
@@ -398,6 +402,7 @@ public class CampaignRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Campaign campaign = null;
-    private static final Logger LOGGER = Logger.getLogger(CampaignRestController.class.getName());
+	protected CampaignService service = null;
+	private static final Logger LOGGER = Logger.getLogger(CampaignRestController.class.getName());
     
 }

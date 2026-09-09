@@ -100,7 +100,6 @@ public class CreativeVariationCommandRestController extends BaseSpringRestContro
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateCreativeVariationCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createCreativeVariation( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class CreativeVariationCommandRestController extends BaseSpringRestContro
 		DeleteCreativeVariationCommand command = new DeleteCreativeVariationCommand( creativeVariationId );
 
     	try {
-        	CreativeVariationService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted CreativeVariation with key " + command.getCreativeVariationId() );
         }
         catch( Throwable exc ) {

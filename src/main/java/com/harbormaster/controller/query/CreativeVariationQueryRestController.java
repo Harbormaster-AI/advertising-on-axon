@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/CreativeVariationQuery")
 public class CreativeVariationQueryRestController extends BaseSpringRestController {
 	
+	public CreativeVariationQueryRestController( CreativeVariationService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a CreativeVariation using a UUID
      * @param		UUID creativeVariationId
@@ -95,7 +99,7 @@ public class CreativeVariationQueryRestController extends BaseSpringRestControll
     	CreativeVariation entity = null;
 
     	try {  
-    		entity = CreativeVariationService.getCreativeVariationInstance().getCreativeVariation( new CreativeVariationFetchOneSummary( creativeVariationId ) );
+    		entity = service.getCreativeVariation( new CreativeVariationFetchOneSummary( creativeVariationId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load CreativeVariation using Id " + creativeVariationId );
@@ -115,7 +119,7 @@ public class CreativeVariationQueryRestController extends BaseSpringRestControll
         
     	try {
             // load the CreativeVariation
-            creativeVariationList = CreativeVariationService.getCreativeVariationInstance().getAllCreativeVariation();
+            creativeVariationList = service.getAllCreativeVariation();
             
             if ( creativeVariationList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all CreativeVariations" );
@@ -135,6 +139,7 @@ public class CreativeVariationQueryRestController extends BaseSpringRestControll
 // Attributes
 //************************************************************************
     protected CreativeVariation creativeVariation = null;
+    protected CreativeVariationService service = null;
     private static final Logger LOGGER = Logger.getLogger(CreativeVariationQueryRestController.class.getName());
     
 }

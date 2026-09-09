@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/BrandSafetyPolicyQuery")
 public class BrandSafetyPolicyQueryRestController extends BaseSpringRestController {
 	
+	public BrandSafetyPolicyQueryRestController( BrandSafetyPolicyService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a BrandSafetyPolicy using a UUID
      * @param		UUID brandSafetyPolicyId
@@ -95,7 +99,7 @@ public class BrandSafetyPolicyQueryRestController extends BaseSpringRestControll
     	BrandSafetyPolicy entity = null;
 
     	try {  
-    		entity = BrandSafetyPolicyService.getBrandSafetyPolicyInstance().getBrandSafetyPolicy( new BrandSafetyPolicyFetchOneSummary( brandSafetyPolicyId ) );
+    		entity = service.getBrandSafetyPolicy( new BrandSafetyPolicyFetchOneSummary( brandSafetyPolicyId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load BrandSafetyPolicy using Id " + brandSafetyPolicyId );
@@ -115,7 +119,7 @@ public class BrandSafetyPolicyQueryRestController extends BaseSpringRestControll
         
     	try {
             // load the BrandSafetyPolicy
-            brandSafetyPolicyList = BrandSafetyPolicyService.getBrandSafetyPolicyInstance().getAllBrandSafetyPolicy();
+            brandSafetyPolicyList = service.getAllBrandSafetyPolicy();
             
             if ( brandSafetyPolicyList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all BrandSafetyPolicys" );
@@ -135,6 +139,7 @@ public class BrandSafetyPolicyQueryRestController extends BaseSpringRestControll
 // Attributes
 //************************************************************************
     protected BrandSafetyPolicy brandSafetyPolicy = null;
+    protected BrandSafetyPolicyService service = null;
     private static final Logger LOGGER = Logger.getLogger(BrandSafetyPolicyQueryRestController.class.getName());
     
 }

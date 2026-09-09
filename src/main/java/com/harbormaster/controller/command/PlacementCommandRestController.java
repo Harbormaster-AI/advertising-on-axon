@@ -100,7 +100,6 @@ public class PlacementCommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreatePlacementCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createPlacement( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class PlacementCommandRestController extends BaseSpringRestController {
 		DeletePlacementCommand command = new DeletePlacementCommand( placementId );
 
     	try {
-        	PlacementService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Placement with key " + command.getPlacementId() );
         }
         catch( Throwable exc ) {

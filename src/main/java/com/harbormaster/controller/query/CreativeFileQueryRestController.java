@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/CreativeFileQuery")
 public class CreativeFileQueryRestController extends BaseSpringRestController {
 	
+	public CreativeFileQueryRestController( CreativeFileService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a CreativeFile using a UUID
      * @param		UUID creativeFileId
@@ -95,7 +99,7 @@ public class CreativeFileQueryRestController extends BaseSpringRestController {
     	CreativeFile entity = null;
 
     	try {  
-    		entity = CreativeFileService.getCreativeFileInstance().getCreativeFile( new CreativeFileFetchOneSummary( creativeFileId ) );
+    		entity = service.getCreativeFile( new CreativeFileFetchOneSummary( creativeFileId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load CreativeFile using Id " + creativeFileId );
@@ -115,7 +119,7 @@ public class CreativeFileQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the CreativeFile
-            creativeFileList = CreativeFileService.getCreativeFileInstance().getAllCreativeFile();
+            creativeFileList = service.getAllCreativeFile();
             
             if ( creativeFileList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all CreativeFiles" );
@@ -135,6 +139,7 @@ public class CreativeFileQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected CreativeFile creativeFile = null;
+    protected CreativeFileService service = null;
     private static final Logger LOGGER = Logger.getLogger(CreativeFileQueryRestController.class.getName());
     
 }

@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/AdAccount")
 public class AdAccountRestController extends BaseSpringRestController {
 
+	public AdAccountRestController( AdAccountService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a AdAccount.  if not key provided, calls create, otherwise calls save
      * @param		AdAccount	adAccount
@@ -94,7 +98,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = AdAccountService.getAdAccountInstance().createAdAccount( command );
+			completableFuture = service.createAdAccount( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateAdAccountCommand
 			// -----------------------------------------------
-			completableFuture = AdAccountService.getAdAccountInstance().updateAdAccount(command);;
+			completableFuture = service.updateAdAccount(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "AdAccountController:update() - successfully update AdAccount - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class AdAccountRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteAdAccountCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	AdAccountService delegate = AdAccountService.getAdAccountInstance();
+        	AdAccountService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted AdAccount with key " + command.getAdAccountId() );
@@ -155,7 +159,7 @@ public class AdAccountRestController extends BaseSpringRestController {
     	AdAccount entity = null;
 
     	try {  
-    		entity = AdAccountService.getAdAccountInstance().getAdAccount( new AdAccountFetchOneSummary( uuid ) );   
+    		entity = service.getAdAccount( new AdAccountFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load AdAccount using Id " + uuid );
@@ -175,7 +179,7 @@ public class AdAccountRestController extends BaseSpringRestController {
         
     	try {
             // load the AdAccount
-            adAccountList = AdAccountService.getAdAccountInstance().getAllAdAccount();
+            adAccountList = service.getAllAdAccount();
             
             if ( adAccountList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all AdAccounts" );
@@ -196,7 +200,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 	@PutMapping("/assignAdvertiser")
 	public void assignAdvertiser( @RequestBody AssignAdvertiserToAdAccountCommand command ) {
 		try {
-			AdAccountService.getAdAccountInstance().assignAdvertiser( command );   
+			service.assignAdvertiser( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Advertiser", exc );
@@ -210,7 +214,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAdvertiser")
 	public void unAssignAdvertiser( @RequestBody(required=true)  UnAssignAdvertiserFromAdAccountCommand command ) {
 		try {
-			AdAccountService.getAdAccountInstance().unAssignAdvertiser( command );   
+			service.unAssignAdvertiser( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Advertiser", exc );
@@ -224,7 +228,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 	@PutMapping("/assignBillingProfile")
 	public void assignBillingProfile( @RequestBody AssignBillingProfileToAdAccountCommand command ) {
 		try {
-			AdAccountService.getAdAccountInstance().assignBillingProfile( command );   
+			service.assignBillingProfile( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign BillingProfile", exc );
@@ -238,7 +242,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignBillingProfile")
 	public void unAssignBillingProfile( @RequestBody(required=true)  UnAssignBillingProfileFromAdAccountCommand command ) {
 		try {
-			AdAccountService.getAdAccountInstance().unAssignBillingProfile( command );   
+			service.unAssignBillingProfile( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign BillingProfile", exc );
@@ -252,7 +256,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 	@PutMapping("/assignDsp")
 	public void assignDsp( @RequestBody AssignDspToAdAccountCommand command ) {
 		try {
-			AdAccountService.getAdAccountInstance().assignDsp( command );   
+			service.assignDsp( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Dsp", exc );
@@ -266,7 +270,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignDsp")
 	public void unAssignDsp( @RequestBody(required=true)  UnAssignDspFromAdAccountCommand command ) {
 		try {
-			AdAccountService.getAdAccountInstance().unAssignDsp( command );   
+			service.unAssignDsp( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Dsp", exc );
@@ -281,7 +285,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 	@PutMapping("/addToUsers")
 	public void addToUsers( @RequestBody(required=true) AssignUsersToAdAccountCommand command ) {
 		try {
-			AdAccountService.getAdAccountInstance().addToUsers( command );   
+			service.addToUsers( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Users", exc );
@@ -296,7 +300,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 	public void removeFromUsers( 	@RequestBody(required=true) RemoveUsersFromAdAccountCommand command )
 	{		
 		try {
-			AdAccountService.getAdAccountInstance().removeFromUsers( command );
+			service.removeFromUsers( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Users", exc );
@@ -310,7 +314,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 	@PutMapping("/addToCampaigns")
 	public void addToCampaigns( @RequestBody(required=true) AssignCampaignsToAdAccountCommand command ) {
 		try {
-			AdAccountService.getAdAccountInstance().addToCampaigns( command );   
+			service.addToCampaigns( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Campaigns", exc );
@@ -325,7 +329,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 	public void removeFromCampaigns( 	@RequestBody(required=true) RemoveCampaignsFromAdAccountCommand command )
 	{		
 		try {
-			AdAccountService.getAdAccountInstance().removeFromCampaigns( command );
+			service.removeFromCampaigns( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Campaigns", exc );
@@ -339,7 +343,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 	@PutMapping("/addToPerformanceMetrics")
 	public void addToPerformanceMetrics( @RequestBody(required=true) AssignPerformanceMetricsToAdAccountCommand command ) {
 		try {
-			AdAccountService.getAdAccountInstance().addToPerformanceMetrics( command );   
+			service.addToPerformanceMetrics( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set PerformanceMetrics", exc );
@@ -354,7 +358,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 	public void removeFromPerformanceMetrics( 	@RequestBody(required=true) RemovePerformanceMetricsFromAdAccountCommand command )
 	{		
 		try {
-			AdAccountService.getAdAccountInstance().removeFromPerformanceMetrics( command );
+			service.removeFromPerformanceMetrics( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set PerformanceMetrics", exc );
@@ -368,6 +372,7 @@ public class AdAccountRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected AdAccount adAccount = null;
-    private static final Logger LOGGER = Logger.getLogger(AdAccountRestController.class.getName());
+	protected AdAccountService service = null;
+	private static final Logger LOGGER = Logger.getLogger(AdAccountRestController.class.getName());
     
 }

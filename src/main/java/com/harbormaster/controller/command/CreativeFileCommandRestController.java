@@ -100,7 +100,6 @@ public class CreativeFileCommandRestController extends BaseSpringRestController 
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateCreativeFileCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createCreativeFile( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class CreativeFileCommandRestController extends BaseSpringRestController 
 		DeleteCreativeFileCommand command = new DeleteCreativeFileCommand( creativeFileId );
 
     	try {
-        	CreativeFileService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted CreativeFile with key " + command.getCreativeFileId() );
         }
         catch( Throwable exc ) {

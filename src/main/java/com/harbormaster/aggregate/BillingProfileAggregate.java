@@ -79,7 +79,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateBillingProfileEvent</li>
  *      <li>DeleteBillingProfileEvent</li>
    *       <li>AssignAdvertiserToBillingProfileEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignAdvertiserFromBillingProfileEvent</li>
    *       <li>AssignPaymentMethodsToBillingProfileEvent</li>
  *       <li>RemovePaymentMethodsFromBillingProfileEvent</li>
   *       <li>AssignAdAccountsToBillingProfileEvent</li>

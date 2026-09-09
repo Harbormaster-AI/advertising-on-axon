@@ -72,7 +72,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateExperimentEvent</li>
  *      <li>DeleteExperimentEvent</li>
    *       <li>AssignCampaignToExperimentEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignCampaignFromExperimentEvent</li>
    *       <li>AssignVariantsToExperimentEvent</li>
  *       <li>RemoveVariantsFromExperimentEvent</li>
   *        </ul>
@@ -224,8 +224,8 @@ public class ExperimentAggregate {
     
     private String name;
     private String hypothesis;
-    private Date startDate;
-    private Date endDate;
+    private  Date startDate;
+    private  Date endDate;
     private ExperimentStatus status;
     private Campaign campaign = null;
     private Set<ExperimentVariant> variants = new HashSet<>();

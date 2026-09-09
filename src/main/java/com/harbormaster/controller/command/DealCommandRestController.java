@@ -100,7 +100,6 @@ public class DealCommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateDealCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createDeal( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class DealCommandRestController extends BaseSpringRestController {
 		DeleteDealCommand command = new DeleteDealCommand( dealId );
 
     	try {
-        	DealService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Deal with key " + command.getDealId() );
         }
         catch( Throwable exc ) {

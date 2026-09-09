@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/PlacementQuery")
 public class PlacementQueryRestController extends BaseSpringRestController {
 	
+	public PlacementQueryRestController( PlacementService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a Placement using a UUID
      * @param		UUID placementId
@@ -95,7 +99,7 @@ public class PlacementQueryRestController extends BaseSpringRestController {
     	Placement entity = null;
 
     	try {  
-    		entity = PlacementService.getPlacementInstance().getPlacement( new PlacementFetchOneSummary( placementId ) );
+    		entity = service.getPlacement( new PlacementFetchOneSummary( placementId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Placement using Id " + placementId );
@@ -115,7 +119,7 @@ public class PlacementQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the Placement
-            placementList = PlacementService.getPlacementInstance().getAllPlacement();
+            placementList = service.getAllPlacement();
             
             if ( placementList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Placements" );
@@ -135,6 +139,7 @@ public class PlacementQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Placement placement = null;
+    protected PlacementService service = null;
     private static final Logger LOGGER = Logger.getLogger(PlacementQueryRestController.class.getName());
     
 }

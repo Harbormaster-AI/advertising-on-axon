@@ -100,7 +100,6 @@ public class LineItemCommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateLineItemCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createLineItem( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class LineItemCommandRestController extends BaseSpringRestController {
 		DeleteLineItemCommand command = new DeleteLineItemCommand( lineItemId );
 
     	try {
-        	LineItemService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted LineItem with key " + command.getLineItemId() );
         }
         catch( Throwable exc ) {

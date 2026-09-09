@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/CreativeAsset")
 public class CreativeAssetRestController extends BaseSpringRestController {
 
+	public CreativeAssetRestController( CreativeAssetService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a CreativeAsset.  if not key provided, calls create, otherwise calls save
      * @param		CreativeAsset	creativeAsset
@@ -94,7 +98,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = CreativeAssetService.getCreativeAssetInstance().createCreativeAsset( command );
+			completableFuture = service.createCreativeAsset( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateCreativeAssetCommand
 			// -----------------------------------------------
-			completableFuture = CreativeAssetService.getCreativeAssetInstance().updateCreativeAsset(command);;
+			completableFuture = service.updateCreativeAsset(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "CreativeAssetController:update() - successfully update CreativeAsset - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteCreativeAssetCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	CreativeAssetService delegate = CreativeAssetService.getCreativeAssetInstance();
+        	CreativeAssetService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted CreativeAsset with key " + command.getCreativeAssetId() );
@@ -155,7 +159,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
     	CreativeAsset entity = null;
 
     	try {  
-    		entity = CreativeAssetService.getCreativeAssetInstance().getCreativeAsset( new CreativeAssetFetchOneSummary( uuid ) );   
+    		entity = service.getCreativeAsset( new CreativeAssetFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load CreativeAsset using Id " + uuid );
@@ -175,7 +179,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
         
     	try {
             // load the CreativeAsset
-            creativeAssetList = CreativeAssetService.getCreativeAssetInstance().getAllCreativeAsset();
+            creativeAssetList = service.getAllCreativeAsset();
             
             if ( creativeAssetList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all CreativeAssets" );
@@ -197,7 +201,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
 	@PutMapping("/addToFiles")
 	public void addToFiles( @RequestBody(required=true) AssignFilesToCreativeAssetCommand command ) {
 		try {
-			CreativeAssetService.getCreativeAssetInstance().addToFiles( command );   
+			service.addToFiles( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Files", exc );
@@ -212,7 +216,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
 	public void removeFromFiles( 	@RequestBody(required=true) RemoveFilesFromCreativeAssetCommand command )
 	{		
 		try {
-			CreativeAssetService.getCreativeAssetInstance().removeFromFiles( command );
+			service.removeFromFiles( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Files", exc );
@@ -226,7 +230,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
 	@PutMapping("/addToApprovals")
 	public void addToApprovals( @RequestBody(required=true) AssignApprovalsToCreativeAssetCommand command ) {
 		try {
-			CreativeAssetService.getCreativeAssetInstance().addToApprovals( command );   
+			service.addToApprovals( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Approvals", exc );
@@ -241,7 +245,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
 	public void removeFromApprovals( 	@RequestBody(required=true) RemoveApprovalsFromCreativeAssetCommand command )
 	{		
 		try {
-			CreativeAssetService.getCreativeAssetInstance().removeFromApprovals( command );
+			service.removeFromApprovals( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Approvals", exc );
@@ -255,7 +259,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
 	@PutMapping("/addToVariations")
 	public void addToVariations( @RequestBody(required=true) AssignVariationsToCreativeAssetCommand command ) {
 		try {
-			CreativeAssetService.getCreativeAssetInstance().addToVariations( command );   
+			service.addToVariations( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Variations", exc );
@@ -270,7 +274,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
 	public void removeFromVariations( 	@RequestBody(required=true) RemoveVariationsFromCreativeAssetCommand command )
 	{		
 		try {
-			CreativeAssetService.getCreativeAssetInstance().removeFromVariations( command );
+			service.removeFromVariations( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Variations", exc );
@@ -284,7 +288,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
 	@PutMapping("/addToLineItems")
 	public void addToLineItems( @RequestBody(required=true) AssignLineItemsToCreativeAssetCommand command ) {
 		try {
-			CreativeAssetService.getCreativeAssetInstance().addToLineItems( command );   
+			service.addToLineItems( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set LineItems", exc );
@@ -299,7 +303,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
 	public void removeFromLineItems( 	@RequestBody(required=true) RemoveLineItemsFromCreativeAssetCommand command )
 	{		
 		try {
-			CreativeAssetService.getCreativeAssetInstance().removeFromLineItems( command );
+			service.removeFromLineItems( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set LineItems", exc );
@@ -313,6 +317,7 @@ public class CreativeAssetRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected CreativeAsset creativeAsset = null;
-    private static final Logger LOGGER = Logger.getLogger(CreativeAssetRestController.class.getName());
+	protected CreativeAssetService service = null;
+	private static final Logger LOGGER = Logger.getLogger(CreativeAssetRestController.class.getName());
     
 }

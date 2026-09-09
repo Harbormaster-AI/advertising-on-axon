@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/AgencyQuery")
 public class AgencyQueryRestController extends BaseSpringRestController {
 	
+	public AgencyQueryRestController( AgencyService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a Agency using a UUID
      * @param		UUID agencyId
@@ -95,7 +99,7 @@ public class AgencyQueryRestController extends BaseSpringRestController {
     	Agency entity = null;
 
     	try {  
-    		entity = AgencyService.getAgencyInstance().getAgency( new AgencyFetchOneSummary( agencyId ) );
+    		entity = service.getAgency( new AgencyFetchOneSummary( agencyId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Agency using Id " + agencyId );
@@ -115,7 +119,7 @@ public class AgencyQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the Agency
-            agencyList = AgencyService.getAgencyInstance().getAllAgency();
+            agencyList = service.getAllAgency();
             
             if ( agencyList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Agencys" );
@@ -135,6 +139,7 @@ public class AgencyQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Agency agency = null;
+    protected AgencyService service = null;
     private static final Logger LOGGER = Logger.getLogger(AgencyQueryRestController.class.getName());
     
 }

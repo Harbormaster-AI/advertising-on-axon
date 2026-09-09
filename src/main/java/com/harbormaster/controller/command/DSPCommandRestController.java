@@ -100,7 +100,6 @@ public class DSPCommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateDSPCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createDSP( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class DSPCommandRestController extends BaseSpringRestController {
 		DeleteDSPCommand command = new DeleteDSPCommand( dSPId );
 
     	try {
-        	DSPService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted DSP with key " + command.getDSPId() );
         }
         catch( Throwable exc ) {

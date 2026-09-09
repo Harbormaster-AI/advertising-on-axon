@@ -100,7 +100,6 @@ public class PublisherCommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreatePublisherCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createPublisher( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class PublisherCommandRestController extends BaseSpringRestController {
 		DeletePublisherCommand command = new DeletePublisherCommand( publisherId );
 
     	try {
-        	PublisherService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Publisher with key " + command.getPublisherId() );
         }
         catch( Throwable exc ) {

@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/TrackingPixelQuery")
 public class TrackingPixelQueryRestController extends BaseSpringRestController {
 	
+	public TrackingPixelQueryRestController( TrackingPixelService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a TrackingPixel using a UUID
      * @param		UUID trackingPixelId
@@ -95,7 +99,7 @@ public class TrackingPixelQueryRestController extends BaseSpringRestController {
     	TrackingPixel entity = null;
 
     	try {  
-    		entity = TrackingPixelService.getTrackingPixelInstance().getTrackingPixel( new TrackingPixelFetchOneSummary( trackingPixelId ) );
+    		entity = service.getTrackingPixel( new TrackingPixelFetchOneSummary( trackingPixelId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load TrackingPixel using Id " + trackingPixelId );
@@ -115,7 +119,7 @@ public class TrackingPixelQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the TrackingPixel
-            trackingPixelList = TrackingPixelService.getTrackingPixelInstance().getAllTrackingPixel();
+            trackingPixelList = service.getAllTrackingPixel();
             
             if ( trackingPixelList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all TrackingPixels" );
@@ -135,6 +139,7 @@ public class TrackingPixelQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected TrackingPixel trackingPixel = null;
+    protected TrackingPixelService service = null;
     private static final Logger LOGGER = Logger.getLogger(TrackingPixelQueryRestController.class.getName());
     
 }

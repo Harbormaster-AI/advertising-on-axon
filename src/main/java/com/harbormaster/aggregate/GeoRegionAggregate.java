@@ -72,7 +72,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateGeoRegionEvent</li>
  *      <li>DeleteGeoRegionEvent</li>
    *       <li>AssignParentToGeoRegionEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignParentFromGeoRegionEvent</li>
    *       <li>AssignChildrenToGeoRegionEvent</li>
  *       <li>RemoveChildrenFromGeoRegionEvent</li>
   *        </ul>

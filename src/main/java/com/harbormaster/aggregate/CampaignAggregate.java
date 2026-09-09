@@ -102,9 +102,9 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateCampaignEvent</li>
  *      <li>DeleteCampaignEvent</li>
    *       <li>AssignAdAccountToCampaignEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignAdAccountFromCampaignEvent</li>
   *       <li>AssignInsertionOrderToCampaignEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignInsertionOrderFromCampaignEvent</li>
    *       <li>AssignLineItemsToCampaignEvent</li>
  *       <li>RemoveLineItemsFromCampaignEvent</li>
   *       <li>AssignKpisToCampaignEvent</li>

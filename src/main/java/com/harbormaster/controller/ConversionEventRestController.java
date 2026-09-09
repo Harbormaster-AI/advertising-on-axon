@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/ConversionEvent")
 public class ConversionEventRestController extends BaseSpringRestController {
 
+	public ConversionEventRestController( ConversionEventService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a ConversionEvent.  if not key provided, calls create, otherwise calls save
      * @param		ConversionEvent	conversionEvent
@@ -94,7 +98,7 @@ public class ConversionEventRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = ConversionEventService.getConversionEventInstance().createConversionEvent( command );
+			completableFuture = service.createConversionEvent( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class ConversionEventRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateConversionEventCommand
 			// -----------------------------------------------
-			completableFuture = ConversionEventService.getConversionEventInstance().updateConversionEvent(command);;
+			completableFuture = service.updateConversionEvent(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "ConversionEventController:update() - successfully update ConversionEvent - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class ConversionEventRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteConversionEventCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	ConversionEventService delegate = ConversionEventService.getConversionEventInstance();
+        	ConversionEventService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted ConversionEvent with key " + command.getConversionEventId() );
@@ -155,7 +159,7 @@ public class ConversionEventRestController extends BaseSpringRestController {
     	ConversionEvent entity = null;
 
     	try {  
-    		entity = ConversionEventService.getConversionEventInstance().getConversionEvent( new ConversionEventFetchOneSummary( uuid ) );   
+    		entity = service.getConversionEvent( new ConversionEventFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load ConversionEvent using Id " + uuid );
@@ -175,7 +179,7 @@ public class ConversionEventRestController extends BaseSpringRestController {
         
     	try {
             // load the ConversionEvent
-            conversionEventList = ConversionEventService.getConversionEventInstance().getAllConversionEvent();
+            conversionEventList = service.getAllConversionEvent();
             
             if ( conversionEventList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all ConversionEvents" );
@@ -196,7 +200,7 @@ public class ConversionEventRestController extends BaseSpringRestController {
 	@PutMapping("/assignCampaign")
 	public void assignCampaign( @RequestBody AssignCampaignToConversionEventCommand command ) {
 		try {
-			ConversionEventService.getConversionEventInstance().assignCampaign( command );   
+			service.assignCampaign( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Campaign", exc );
@@ -210,7 +214,7 @@ public class ConversionEventRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignCampaign")
 	public void unAssignCampaign( @RequestBody(required=true)  UnAssignCampaignFromConversionEventCommand command ) {
 		try {
-			ConversionEventService.getConversionEventInstance().unAssignCampaign( command );   
+			service.unAssignCampaign( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Campaign", exc );
@@ -224,7 +228,7 @@ public class ConversionEventRestController extends BaseSpringRestController {
 	@PutMapping("/assignLineItem")
 	public void assignLineItem( @RequestBody AssignLineItemToConversionEventCommand command ) {
 		try {
-			ConversionEventService.getConversionEventInstance().assignLineItem( command );   
+			service.assignLineItem( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign LineItem", exc );
@@ -238,7 +242,7 @@ public class ConversionEventRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignLineItem")
 	public void unAssignLineItem( @RequestBody(required=true)  UnAssignLineItemFromConversionEventCommand command ) {
 		try {
-			ConversionEventService.getConversionEventInstance().unAssignLineItem( command );   
+			service.unAssignLineItem( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign LineItem", exc );
@@ -252,7 +256,7 @@ public class ConversionEventRestController extends BaseSpringRestController {
 	@PutMapping("/assignTrackingPixel")
 	public void assignTrackingPixel( @RequestBody AssignTrackingPixelToConversionEventCommand command ) {
 		try {
-			ConversionEventService.getConversionEventInstance().assignTrackingPixel( command );   
+			service.assignTrackingPixel( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign TrackingPixel", exc );
@@ -266,7 +270,7 @@ public class ConversionEventRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignTrackingPixel")
 	public void unAssignTrackingPixel( @RequestBody(required=true)  UnAssignTrackingPixelFromConversionEventCommand command ) {
 		try {
-			ConversionEventService.getConversionEventInstance().unAssignTrackingPixel( command );   
+			service.unAssignTrackingPixel( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign TrackingPixel", exc );
@@ -281,6 +285,7 @@ public class ConversionEventRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected ConversionEvent conversionEvent = null;
-    private static final Logger LOGGER = Logger.getLogger(ConversionEventRestController.class.getName());
+	protected ConversionEventService service = null;
+	private static final Logger LOGGER = Logger.getLogger(ConversionEventRestController.class.getName());
     
 }

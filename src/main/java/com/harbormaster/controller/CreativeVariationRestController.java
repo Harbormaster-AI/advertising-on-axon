@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/CreativeVariation")
 public class CreativeVariationRestController extends BaseSpringRestController {
 
+	public CreativeVariationRestController( CreativeVariationService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a CreativeVariation.  if not key provided, calls create, otherwise calls save
      * @param		CreativeVariation	creativeVariation
@@ -94,7 +98,7 @@ public class CreativeVariationRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = CreativeVariationService.getCreativeVariationInstance().createCreativeVariation( command );
+			completableFuture = service.createCreativeVariation( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class CreativeVariationRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateCreativeVariationCommand
 			// -----------------------------------------------
-			completableFuture = CreativeVariationService.getCreativeVariationInstance().updateCreativeVariation(command);;
+			completableFuture = service.updateCreativeVariation(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "CreativeVariationController:update() - successfully update CreativeVariation - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class CreativeVariationRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteCreativeVariationCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	CreativeVariationService delegate = CreativeVariationService.getCreativeVariationInstance();
+        	CreativeVariationService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted CreativeVariation with key " + command.getCreativeVariationId() );
@@ -155,7 +159,7 @@ public class CreativeVariationRestController extends BaseSpringRestController {
     	CreativeVariation entity = null;
 
     	try {  
-    		entity = CreativeVariationService.getCreativeVariationInstance().getCreativeVariation( new CreativeVariationFetchOneSummary( uuid ) );   
+    		entity = service.getCreativeVariation( new CreativeVariationFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load CreativeVariation using Id " + uuid );
@@ -175,7 +179,7 @@ public class CreativeVariationRestController extends BaseSpringRestController {
         
     	try {
             // load the CreativeVariation
-            creativeVariationList = CreativeVariationService.getCreativeVariationInstance().getAllCreativeVariation();
+            creativeVariationList = service.getAllCreativeVariation();
             
             if ( creativeVariationList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all CreativeVariations" );
@@ -196,7 +200,7 @@ public class CreativeVariationRestController extends BaseSpringRestController {
 	@PutMapping("/assignCreativeAsset")
 	public void assignCreativeAsset( @RequestBody AssignCreativeAssetToCreativeVariationCommand command ) {
 		try {
-			CreativeVariationService.getCreativeVariationInstance().assignCreativeAsset( command );   
+			service.assignCreativeAsset( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign CreativeAsset", exc );
@@ -210,7 +214,7 @@ public class CreativeVariationRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignCreativeAsset")
 	public void unAssignCreativeAsset( @RequestBody(required=true)  UnAssignCreativeAssetFromCreativeVariationCommand command ) {
 		try {
-			CreativeVariationService.getCreativeVariationInstance().unAssignCreativeAsset( command );   
+			service.unAssignCreativeAsset( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign CreativeAsset", exc );
@@ -225,6 +229,7 @@ public class CreativeVariationRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected CreativeVariation creativeVariation = null;
-    private static final Logger LOGGER = Logger.getLogger(CreativeVariationRestController.class.getName());
+	protected CreativeVariationService service = null;
+	private static final Logger LOGGER = Logger.getLogger(CreativeVariationRestController.class.getName());
     
 }

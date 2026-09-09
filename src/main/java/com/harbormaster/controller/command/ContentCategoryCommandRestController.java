@@ -100,7 +100,6 @@ public class ContentCategoryCommandRestController extends BaseSpringRestControll
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateContentCategoryCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createContentCategory( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class ContentCategoryCommandRestController extends BaseSpringRestControll
 		DeleteContentCategoryCommand command = new DeleteContentCategoryCommand( contentCategoryId );
 
     	try {
-        	ContentCategoryService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted ContentCategory with key " + command.getContentCategoryId() );
         }
         catch( Throwable exc ) {

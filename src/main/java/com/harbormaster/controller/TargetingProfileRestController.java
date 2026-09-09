@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/TargetingProfile")
 public class TargetingProfileRestController extends BaseSpringRestController {
 
+	public TargetingProfileRestController( TargetingProfileService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a TargetingProfile.  if not key provided, calls create, otherwise calls save
      * @param		TargetingProfile	targetingProfile
@@ -94,7 +98,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = TargetingProfileService.getTargetingProfileInstance().createTargetingProfile( command );
+			completableFuture = service.createTargetingProfile( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateTargetingProfileCommand
 			// -----------------------------------------------
-			completableFuture = TargetingProfileService.getTargetingProfileInstance().updateTargetingProfile(command);;
+			completableFuture = service.updateTargetingProfile(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "TargetingProfileController:update() - successfully update TargetingProfile - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteTargetingProfileCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	TargetingProfileService delegate = TargetingProfileService.getTargetingProfileInstance();
+        	TargetingProfileService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted TargetingProfile with key " + command.getTargetingProfileId() );
@@ -155,7 +159,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
     	TargetingProfile entity = null;
 
     	try {  
-    		entity = TargetingProfileService.getTargetingProfileInstance().getTargetingProfile( new TargetingProfileFetchOneSummary( uuid ) );   
+    		entity = service.getTargetingProfile( new TargetingProfileFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load TargetingProfile using Id " + uuid );
@@ -175,7 +179,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
         
     	try {
             // load the TargetingProfile
-            targetingProfileList = TargetingProfileService.getTargetingProfileInstance().getAllTargetingProfile();
+            targetingProfileList = service.getAllTargetingProfile();
             
             if ( targetingProfileList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all TargetingProfiles" );
@@ -196,7 +200,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
 	@PutMapping("/assignBrandSafetyPolicy")
 	public void assignBrandSafetyPolicy( @RequestBody AssignBrandSafetyPolicyToTargetingProfileCommand command ) {
 		try {
-			TargetingProfileService.getTargetingProfileInstance().assignBrandSafetyPolicy( command );   
+			service.assignBrandSafetyPolicy( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign BrandSafetyPolicy", exc );
@@ -210,7 +214,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignBrandSafetyPolicy")
 	public void unAssignBrandSafetyPolicy( @RequestBody(required=true)  UnAssignBrandSafetyPolicyFromTargetingProfileCommand command ) {
 		try {
-			TargetingProfileService.getTargetingProfileInstance().unAssignBrandSafetyPolicy( command );   
+			service.unAssignBrandSafetyPolicy( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign BrandSafetyPolicy", exc );
@@ -225,7 +229,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
 	@PutMapping("/addToAudienceSegments")
 	public void addToAudienceSegments( @RequestBody(required=true) AssignAudienceSegmentsToTargetingProfileCommand command ) {
 		try {
-			TargetingProfileService.getTargetingProfileInstance().addToAudienceSegments( command );   
+			service.addToAudienceSegments( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set AudienceSegments", exc );
@@ -240,7 +244,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
 	public void removeFromAudienceSegments( 	@RequestBody(required=true) RemoveAudienceSegmentsFromTargetingProfileCommand command )
 	{		
 		try {
-			TargetingProfileService.getTargetingProfileInstance().removeFromAudienceSegments( command );
+			service.removeFromAudienceSegments( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set AudienceSegments", exc );
@@ -254,7 +258,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
 	@PutMapping("/addToGeoRegions")
 	public void addToGeoRegions( @RequestBody(required=true) AssignGeoRegionsToTargetingProfileCommand command ) {
 		try {
-			TargetingProfileService.getTargetingProfileInstance().addToGeoRegions( command );   
+			service.addToGeoRegions( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set GeoRegions", exc );
@@ -269,7 +273,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
 	public void removeFromGeoRegions( 	@RequestBody(required=true) RemoveGeoRegionsFromTargetingProfileCommand command )
 	{		
 		try {
-			TargetingProfileService.getTargetingProfileInstance().removeFromGeoRegions( command );
+			service.removeFromGeoRegions( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set GeoRegions", exc );
@@ -283,7 +287,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
 	@PutMapping("/addToContentCategories")
 	public void addToContentCategories( @RequestBody(required=true) AssignContentCategoriesToTargetingProfileCommand command ) {
 		try {
-			TargetingProfileService.getTargetingProfileInstance().addToContentCategories( command );   
+			service.addToContentCategories( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set ContentCategories", exc );
@@ -298,7 +302,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
 	public void removeFromContentCategories( 	@RequestBody(required=true) RemoveContentCategoriesFromTargetingProfileCommand command )
 	{		
 		try {
-			TargetingProfileService.getTargetingProfileInstance().removeFromContentCategories( command );
+			service.removeFromContentCategories( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set ContentCategories", exc );
@@ -312,7 +316,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
 	@PutMapping("/addToDeviceCriteria")
 	public void addToDeviceCriteria( @RequestBody(required=true) AssignDeviceCriteriaToTargetingProfileCommand command ) {
 		try {
-			TargetingProfileService.getTargetingProfileInstance().addToDeviceCriteria( command );   
+			service.addToDeviceCriteria( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set DeviceCriteria", exc );
@@ -327,7 +331,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
 	public void removeFromDeviceCriteria( 	@RequestBody(required=true) RemoveDeviceCriteriaFromTargetingProfileCommand command )
 	{		
 		try {
-			TargetingProfileService.getTargetingProfileInstance().removeFromDeviceCriteria( command );
+			service.removeFromDeviceCriteria( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set DeviceCriteria", exc );
@@ -341,6 +345,7 @@ public class TargetingProfileRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected TargetingProfile targetingProfile = null;
-    private static final Logger LOGGER = Logger.getLogger(TargetingProfileRestController.class.getName());
+	protected TargetingProfileService service = null;
+	private static final Logger LOGGER = Logger.getLogger(TargetingProfileRestController.class.getName());
     
 }

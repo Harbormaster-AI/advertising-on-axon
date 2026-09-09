@@ -65,7 +65,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateKPIEvent</li>
  *      <li>DeleteKPIEvent</li>
    *       <li>AssignCampaignToKPIEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignCampaignFromKPIEvent</li>
    *        </ul>
  *
  * <p>@author Harbormaster Dev Team</p>

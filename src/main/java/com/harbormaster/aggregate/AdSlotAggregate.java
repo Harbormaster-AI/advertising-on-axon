@@ -79,7 +79,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateAdSlotEvent</li>
  *      <li>DeleteAdSlotEvent</li>
    *       <li>AssignInventorySourceToAdSlotEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignInventorySourceFromAdSlotEvent</li>
    *       <li>AssignPlacementsToAdSlotEvent</li>
  *       <li>RemovePlacementsFromAdSlotEvent</li>
   *       <li>AssignRatesToAdSlotEvent</li>
@@ -265,8 +265,8 @@ public class AdSlotAggregate {
     private UUID adSlotId;
     
     private String slotCode;
-    private Integer width;
-    private Integer height;
+    private int width;
+    private int height;
     private Money floorPrice;
     private AdFormat format;
     private InventorySource inventorySource = null;

@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/AdSlotQuery")
 public class AdSlotQueryRestController extends BaseSpringRestController {
 	
+	public AdSlotQueryRestController( AdSlotService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a AdSlot using a UUID
      * @param		UUID adSlotId
@@ -95,7 +99,7 @@ public class AdSlotQueryRestController extends BaseSpringRestController {
     	AdSlot entity = null;
 
     	try {  
-    		entity = AdSlotService.getAdSlotInstance().getAdSlot( new AdSlotFetchOneSummary( adSlotId ) );
+    		entity = service.getAdSlot( new AdSlotFetchOneSummary( adSlotId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load AdSlot using Id " + adSlotId );
@@ -115,7 +119,7 @@ public class AdSlotQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the AdSlot
-            adSlotList = AdSlotService.getAdSlotInstance().getAllAdSlot();
+            adSlotList = service.getAllAdSlot();
             
             if ( adSlotList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all AdSlots" );
@@ -135,6 +139,7 @@ public class AdSlotQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected AdSlot adSlot = null;
+    protected AdSlotService service = null;
     private static final Logger LOGGER = Logger.getLogger(AdSlotQueryRestController.class.getName());
     
 }

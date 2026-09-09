@@ -72,7 +72,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateRateCardEvent</li>
  *      <li>DeleteRateCardEvent</li>
    *       <li>AssignPublisherToRateCardEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignPublisherFromRateCardEvent</li>
    *       <li>AssignRatesToRateCardEvent</li>
  *       <li>RemoveRatesFromRateCardEvent</li>
   *        </ul>
@@ -219,7 +219,7 @@ public class RateCardAggregate {
     private UUID rateCardId;
     
     private String name;
-    private Date effectiveDate;
+    private  Date effectiveDate;
     private String currency;
     private Publisher publisher = null;
     private Set<Rate> rates = new HashSet<>();

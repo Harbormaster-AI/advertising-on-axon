@@ -73,15 +73,15 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdatePerformanceMetricEvent</li>
  *      <li>DeletePerformanceMetricEvent</li>
    *       <li>AssignAdAccountToPerformanceMetricEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignAdAccountFromPerformanceMetricEvent</li>
   *       <li>AssignCampaignToPerformanceMetricEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignCampaignFromPerformanceMetricEvent</li>
   *       <li>AssignLineItemToPerformanceMetricEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignLineItemFromPerformanceMetricEvent</li>
   *       <li>AssignPlacementToPerformanceMetricEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignPlacementFromPerformanceMetricEvent</li>
   *       <li>AssignCreativeAssetToPerformanceMetricEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignCreativeAssetFromPerformanceMetricEvent</li>
    *        </ul>
  *
  * <p>@author Harbormaster Dev Team</p>
@@ -320,7 +320,7 @@ public class PerformanceMetricAggregate {
     @AggregateIdentifier
     private UUID performanceMetricId;
     
-    private Date date;
+    private  Date date;
     private java.math.BigDecimal value;
     private MetricType metricType;
     private AdAccount adAccount = null;

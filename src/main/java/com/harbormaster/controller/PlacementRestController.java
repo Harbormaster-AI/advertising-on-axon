@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Placement")
 public class PlacementRestController extends BaseSpringRestController {
 
+	public PlacementRestController( PlacementService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a Placement.  if not key provided, calls create, otherwise calls save
      * @param		Placement	placement
@@ -94,7 +98,7 @@ public class PlacementRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = PlacementService.getPlacementInstance().createPlacement( command );
+			completableFuture = service.createPlacement( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class PlacementRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdatePlacementCommand
 			// -----------------------------------------------
-			completableFuture = PlacementService.getPlacementInstance().updatePlacement(command);;
+			completableFuture = service.updatePlacement(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "PlacementController:update() - successfully update Placement - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class PlacementRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeletePlacementCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	PlacementService delegate = PlacementService.getPlacementInstance();
+        	PlacementService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Placement with key " + command.getPlacementId() );
@@ -155,7 +159,7 @@ public class PlacementRestController extends BaseSpringRestController {
     	Placement entity = null;
 
     	try {  
-    		entity = PlacementService.getPlacementInstance().getPlacement( new PlacementFetchOneSummary( uuid ) );   
+    		entity = service.getPlacement( new PlacementFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Placement using Id " + uuid );
@@ -175,7 +179,7 @@ public class PlacementRestController extends BaseSpringRestController {
         
     	try {
             // load the Placement
-            placementList = PlacementService.getPlacementInstance().getAllPlacement();
+            placementList = service.getAllPlacement();
             
             if ( placementList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Placements" );
@@ -196,7 +200,7 @@ public class PlacementRestController extends BaseSpringRestController {
 	@PutMapping("/assignLineItem")
 	public void assignLineItem( @RequestBody AssignLineItemToPlacementCommand command ) {
 		try {
-			PlacementService.getPlacementInstance().assignLineItem( command );   
+			service.assignLineItem( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign LineItem", exc );
@@ -210,7 +214,7 @@ public class PlacementRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignLineItem")
 	public void unAssignLineItem( @RequestBody(required=true)  UnAssignLineItemFromPlacementCommand command ) {
 		try {
-			PlacementService.getPlacementInstance().unAssignLineItem( command );   
+			service.unAssignLineItem( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign LineItem", exc );
@@ -224,7 +228,7 @@ public class PlacementRestController extends BaseSpringRestController {
 	@PutMapping("/assignAdSlot")
 	public void assignAdSlot( @RequestBody AssignAdSlotToPlacementCommand command ) {
 		try {
-			PlacementService.getPlacementInstance().assignAdSlot( command );   
+			service.assignAdSlot( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign AdSlot", exc );
@@ -238,7 +242,7 @@ public class PlacementRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAdSlot")
 	public void unAssignAdSlot( @RequestBody(required=true)  UnAssignAdSlotFromPlacementCommand command ) {
 		try {
-			PlacementService.getPlacementInstance().unAssignAdSlot( command );   
+			service.unAssignAdSlot( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign AdSlot", exc );
@@ -252,7 +256,7 @@ public class PlacementRestController extends BaseSpringRestController {
 	@PutMapping("/assignDeal")
 	public void assignDeal( @RequestBody AssignDealToPlacementCommand command ) {
 		try {
-			PlacementService.getPlacementInstance().assignDeal( command );   
+			service.assignDeal( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Deal", exc );
@@ -266,7 +270,7 @@ public class PlacementRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignDeal")
 	public void unAssignDeal( @RequestBody(required=true)  UnAssignDealFromPlacementCommand command ) {
 		try {
-			PlacementService.getPlacementInstance().unAssignDeal( command );   
+			service.unAssignDeal( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Deal", exc );
@@ -281,6 +285,7 @@ public class PlacementRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Placement placement = null;
-    private static final Logger LOGGER = Logger.getLogger(PlacementRestController.class.getName());
+	protected PlacementService service = null;
+	private static final Logger LOGGER = Logger.getLogger(PlacementRestController.class.getName());
     
 }

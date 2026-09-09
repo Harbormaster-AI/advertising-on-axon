@@ -100,7 +100,6 @@ public class AdSlotCommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateAdSlotCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createAdSlot( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class AdSlotCommandRestController extends BaseSpringRestController {
 		DeleteAdSlotCommand command = new DeleteAdSlotCommand( adSlotId );
 
     	try {
-        	AdSlotService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted AdSlot with key " + command.getAdSlotId() );
         }
         catch( Throwable exc ) {

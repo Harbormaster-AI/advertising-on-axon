@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/AudienceSegment")
 public class AudienceSegmentRestController extends BaseSpringRestController {
 
+	public AudienceSegmentRestController( AudienceSegmentService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a AudienceSegment.  if not key provided, calls create, otherwise calls save
      * @param		AudienceSegment	audienceSegment
@@ -94,7 +98,7 @@ public class AudienceSegmentRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = AudienceSegmentService.getAudienceSegmentInstance().createAudienceSegment( command );
+			completableFuture = service.createAudienceSegment( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class AudienceSegmentRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateAudienceSegmentCommand
 			// -----------------------------------------------
-			completableFuture = AudienceSegmentService.getAudienceSegmentInstance().updateAudienceSegment(command);;
+			completableFuture = service.updateAudienceSegment(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "AudienceSegmentController:update() - successfully update AudienceSegment - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class AudienceSegmentRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteAudienceSegmentCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	AudienceSegmentService delegate = AudienceSegmentService.getAudienceSegmentInstance();
+        	AudienceSegmentService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted AudienceSegment with key " + command.getAudienceSegmentId() );
@@ -155,7 +159,7 @@ public class AudienceSegmentRestController extends BaseSpringRestController {
     	AudienceSegment entity = null;
 
     	try {  
-    		entity = AudienceSegmentService.getAudienceSegmentInstance().getAudienceSegment( new AudienceSegmentFetchOneSummary( uuid ) );   
+    		entity = service.getAudienceSegment( new AudienceSegmentFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load AudienceSegment using Id " + uuid );
@@ -175,7 +179,7 @@ public class AudienceSegmentRestController extends BaseSpringRestController {
         
     	try {
             // load the AudienceSegment
-            audienceSegmentList = AudienceSegmentService.getAudienceSegmentInstance().getAllAudienceSegment();
+            audienceSegmentList = service.getAllAudienceSegment();
             
             if ( audienceSegmentList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all AudienceSegments" );
@@ -196,7 +200,7 @@ public class AudienceSegmentRestController extends BaseSpringRestController {
 	@PutMapping("/assignProvider")
 	public void assignProvider( @RequestBody AssignProviderToAudienceSegmentCommand command ) {
 		try {
-			AudienceSegmentService.getAudienceSegmentInstance().assignProvider( command );   
+			service.assignProvider( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Provider", exc );
@@ -210,7 +214,7 @@ public class AudienceSegmentRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignProvider")
 	public void unAssignProvider( @RequestBody(required=true)  UnAssignProviderFromAudienceSegmentCommand command ) {
 		try {
-			AudienceSegmentService.getAudienceSegmentInstance().unAssignProvider( command );   
+			service.unAssignProvider( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Provider", exc );
@@ -225,7 +229,7 @@ public class AudienceSegmentRestController extends BaseSpringRestController {
 	@PutMapping("/addToCampaigns")
 	public void addToCampaigns( @RequestBody(required=true) AssignCampaignsToAudienceSegmentCommand command ) {
 		try {
-			AudienceSegmentService.getAudienceSegmentInstance().addToCampaigns( command );   
+			service.addToCampaigns( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Campaigns", exc );
@@ -240,7 +244,7 @@ public class AudienceSegmentRestController extends BaseSpringRestController {
 	public void removeFromCampaigns( 	@RequestBody(required=true) RemoveCampaignsFromAudienceSegmentCommand command )
 	{		
 		try {
-			AudienceSegmentService.getAudienceSegmentInstance().removeFromCampaigns( command );
+			service.removeFromCampaigns( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Campaigns", exc );
@@ -254,6 +258,7 @@ public class AudienceSegmentRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected AudienceSegment audienceSegment = null;
-    private static final Logger LOGGER = Logger.getLogger(AudienceSegmentRestController.class.getName());
+	protected AudienceSegmentService service = null;
+	private static final Logger LOGGER = Logger.getLogger(AudienceSegmentRestController.class.getName());
     
 }

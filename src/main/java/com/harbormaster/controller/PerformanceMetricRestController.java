@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/PerformanceMetric")
 public class PerformanceMetricRestController extends BaseSpringRestController {
 
+	public PerformanceMetricRestController( PerformanceMetricService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a PerformanceMetric.  if not key provided, calls create, otherwise calls save
      * @param		PerformanceMetric	performanceMetric
@@ -94,7 +98,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = PerformanceMetricService.getPerformanceMetricInstance().createPerformanceMetric( command );
+			completableFuture = service.createPerformanceMetric( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdatePerformanceMetricCommand
 			// -----------------------------------------------
-			completableFuture = PerformanceMetricService.getPerformanceMetricInstance().updatePerformanceMetric(command);;
+			completableFuture = service.updatePerformanceMetric(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "PerformanceMetricController:update() - successfully update PerformanceMetric - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeletePerformanceMetricCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	PerformanceMetricService delegate = PerformanceMetricService.getPerformanceMetricInstance();
+        	PerformanceMetricService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted PerformanceMetric with key " + command.getPerformanceMetricId() );
@@ -155,7 +159,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
     	PerformanceMetric entity = null;
 
     	try {  
-    		entity = PerformanceMetricService.getPerformanceMetricInstance().getPerformanceMetric( new PerformanceMetricFetchOneSummary( uuid ) );   
+    		entity = service.getPerformanceMetric( new PerformanceMetricFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load PerformanceMetric using Id " + uuid );
@@ -175,7 +179,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
         
     	try {
             // load the PerformanceMetric
-            performanceMetricList = PerformanceMetricService.getPerformanceMetricInstance().getAllPerformanceMetric();
+            performanceMetricList = service.getAllPerformanceMetric();
             
             if ( performanceMetricList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all PerformanceMetrics" );
@@ -196,7 +200,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
 	@PutMapping("/assignAdAccount")
 	public void assignAdAccount( @RequestBody AssignAdAccountToPerformanceMetricCommand command ) {
 		try {
-			PerformanceMetricService.getPerformanceMetricInstance().assignAdAccount( command );   
+			service.assignAdAccount( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign AdAccount", exc );
@@ -210,7 +214,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAdAccount")
 	public void unAssignAdAccount( @RequestBody(required=true)  UnAssignAdAccountFromPerformanceMetricCommand command ) {
 		try {
-			PerformanceMetricService.getPerformanceMetricInstance().unAssignAdAccount( command );   
+			service.unAssignAdAccount( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign AdAccount", exc );
@@ -224,7 +228,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
 	@PutMapping("/assignCampaign")
 	public void assignCampaign( @RequestBody AssignCampaignToPerformanceMetricCommand command ) {
 		try {
-			PerformanceMetricService.getPerformanceMetricInstance().assignCampaign( command );   
+			service.assignCampaign( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Campaign", exc );
@@ -238,7 +242,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignCampaign")
 	public void unAssignCampaign( @RequestBody(required=true)  UnAssignCampaignFromPerformanceMetricCommand command ) {
 		try {
-			PerformanceMetricService.getPerformanceMetricInstance().unAssignCampaign( command );   
+			service.unAssignCampaign( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Campaign", exc );
@@ -252,7 +256,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
 	@PutMapping("/assignLineItem")
 	public void assignLineItem( @RequestBody AssignLineItemToPerformanceMetricCommand command ) {
 		try {
-			PerformanceMetricService.getPerformanceMetricInstance().assignLineItem( command );   
+			service.assignLineItem( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign LineItem", exc );
@@ -266,7 +270,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignLineItem")
 	public void unAssignLineItem( @RequestBody(required=true)  UnAssignLineItemFromPerformanceMetricCommand command ) {
 		try {
-			PerformanceMetricService.getPerformanceMetricInstance().unAssignLineItem( command );   
+			service.unAssignLineItem( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign LineItem", exc );
@@ -280,7 +284,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
 	@PutMapping("/assignPlacement")
 	public void assignPlacement( @RequestBody AssignPlacementToPerformanceMetricCommand command ) {
 		try {
-			PerformanceMetricService.getPerformanceMetricInstance().assignPlacement( command );   
+			service.assignPlacement( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Placement", exc );
@@ -294,7 +298,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignPlacement")
 	public void unAssignPlacement( @RequestBody(required=true)  UnAssignPlacementFromPerformanceMetricCommand command ) {
 		try {
-			PerformanceMetricService.getPerformanceMetricInstance().unAssignPlacement( command );   
+			service.unAssignPlacement( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Placement", exc );
@@ -308,7 +312,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
 	@PutMapping("/assignCreativeAsset")
 	public void assignCreativeAsset( @RequestBody AssignCreativeAssetToPerformanceMetricCommand command ) {
 		try {
-			PerformanceMetricService.getPerformanceMetricInstance().assignCreativeAsset( command );   
+			service.assignCreativeAsset( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign CreativeAsset", exc );
@@ -322,7 +326,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignCreativeAsset")
 	public void unAssignCreativeAsset( @RequestBody(required=true)  UnAssignCreativeAssetFromPerformanceMetricCommand command ) {
 		try {
-			PerformanceMetricService.getPerformanceMetricInstance().unAssignCreativeAsset( command );   
+			service.unAssignCreativeAsset( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign CreativeAsset", exc );
@@ -337,6 +341,7 @@ public class PerformanceMetricRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected PerformanceMetric performanceMetric = null;
-    private static final Logger LOGGER = Logger.getLogger(PerformanceMetricRestController.class.getName());
+	protected PerformanceMetricService service = null;
+	private static final Logger LOGGER = Logger.getLogger(PerformanceMetricRestController.class.getName());
     
 }

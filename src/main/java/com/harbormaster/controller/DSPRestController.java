@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/DSP")
 public class DSPRestController extends BaseSpringRestController {
 
+	public DSPRestController( DSPService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a DSP.  if not key provided, calls create, otherwise calls save
      * @param		DSP	dSP
@@ -94,7 +98,7 @@ public class DSPRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = DSPService.getDSPInstance().createDSP( command );
+			completableFuture = service.createDSP( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class DSPRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateDSPCommand
 			// -----------------------------------------------
-			completableFuture = DSPService.getDSPInstance().updateDSP(command);;
+			completableFuture = service.updateDSP(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "DSPController:update() - successfully update DSP - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class DSPRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteDSPCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	DSPService delegate = DSPService.getDSPInstance();
+        	DSPService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted DSP with key " + command.getDSPId() );
@@ -155,7 +159,7 @@ public class DSPRestController extends BaseSpringRestController {
     	DSP entity = null;
 
     	try {  
-    		entity = DSPService.getDSPInstance().getDSP( new DSPFetchOneSummary( uuid ) );   
+    		entity = service.getDSP( new DSPFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load DSP using Id " + uuid );
@@ -175,7 +179,7 @@ public class DSPRestController extends BaseSpringRestController {
         
     	try {
             // load the DSP
-            dSPList = DSPService.getDSPInstance().getAllDSP();
+            dSPList = service.getAllDSP();
             
             if ( dSPList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all DSPs" );
@@ -197,7 +201,7 @@ public class DSPRestController extends BaseSpringRestController {
 	@PutMapping("/addToAdAccounts")
 	public void addToAdAccounts( @RequestBody(required=true) AssignAdAccountsToDSPCommand command ) {
 		try {
-			DSPService.getDSPInstance().addToAdAccounts( command );   
+			service.addToAdAccounts( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set AdAccounts", exc );
@@ -212,7 +216,7 @@ public class DSPRestController extends BaseSpringRestController {
 	public void removeFromAdAccounts( 	@RequestBody(required=true) RemoveAdAccountsFromDSPCommand command )
 	{		
 		try {
-			DSPService.getDSPInstance().removeFromAdAccounts( command );
+			service.removeFromAdAccounts( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set AdAccounts", exc );
@@ -226,6 +230,7 @@ public class DSPRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected DSP dSP = null;
-    private static final Logger LOGGER = Logger.getLogger(DSPRestController.class.getName());
+	protected DSPService service = null;
+	private static final Logger LOGGER = Logger.getLogger(DSPRestController.class.getName());
     
 }

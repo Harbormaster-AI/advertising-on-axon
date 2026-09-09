@@ -69,11 +69,11 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateExperimentVariantEvent</li>
  *      <li>DeleteExperimentVariantEvent</li>
    *       <li>AssignExperimentToExperimentVariantEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignExperimentFromExperimentVariantEvent</li>
   *       <li>AssignCreativeVariationToExperimentVariantEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignCreativeVariationFromExperimentVariantEvent</li>
   *       <li>AssignLineItemToExperimentVariantEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignLineItemFromExperimentVariantEvent</li>
    *        </ul>
  *
  * <p>@author Harbormaster Dev Team</p>

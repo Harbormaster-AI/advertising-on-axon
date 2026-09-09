@@ -100,7 +100,6 @@ public class InventorySourceCommandRestController extends BaseSpringRestControll
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateInventorySourceCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createInventorySource( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class InventorySourceCommandRestController extends BaseSpringRestControll
 		DeleteInventorySourceCommand command = new DeleteInventorySourceCommand( inventorySourceId );
 
     	try {
-        	InventorySourceService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted InventorySource with key " + command.getInventorySourceId() );
         }
         catch( Throwable exc ) {

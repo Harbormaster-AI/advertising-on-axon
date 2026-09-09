@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Report")
 public class ReportRestController extends BaseSpringRestController {
 
+	public ReportRestController( ReportService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a Report.  if not key provided, calls create, otherwise calls save
      * @param		Report	report
@@ -94,7 +98,7 @@ public class ReportRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = ReportService.getReportInstance().createReport( command );
+			completableFuture = service.createReport( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class ReportRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateReportCommand
 			// -----------------------------------------------
-			completableFuture = ReportService.getReportInstance().updateReport(command);;
+			completableFuture = service.updateReport(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "ReportController:update() - successfully update Report - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class ReportRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteReportCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	ReportService delegate = ReportService.getReportInstance();
+        	ReportService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Report with key " + command.getReportId() );
@@ -155,7 +159,7 @@ public class ReportRestController extends BaseSpringRestController {
     	Report entity = null;
 
     	try {  
-    		entity = ReportService.getReportInstance().getReport( new ReportFetchOneSummary( uuid ) );   
+    		entity = service.getReport( new ReportFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Report using Id " + uuid );
@@ -175,7 +179,7 @@ public class ReportRestController extends BaseSpringRestController {
         
     	try {
             // load the Report
-            reportList = ReportService.getReportInstance().getAllReport();
+            reportList = service.getAllReport();
             
             if ( reportList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Reports" );
@@ -196,7 +200,7 @@ public class ReportRestController extends BaseSpringRestController {
 	@PutMapping("/assignAdAccount")
 	public void assignAdAccount( @RequestBody AssignAdAccountToReportCommand command ) {
 		try {
-			ReportService.getReportInstance().assignAdAccount( command );   
+			service.assignAdAccount( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign AdAccount", exc );
@@ -210,7 +214,7 @@ public class ReportRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAdAccount")
 	public void unAssignAdAccount( @RequestBody(required=true)  UnAssignAdAccountFromReportCommand command ) {
 		try {
-			ReportService.getReportInstance().unAssignAdAccount( command );   
+			service.unAssignAdAccount( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign AdAccount", exc );
@@ -224,7 +228,7 @@ public class ReportRestController extends BaseSpringRestController {
 	@PutMapping("/assignCampaign")
 	public void assignCampaign( @RequestBody AssignCampaignToReportCommand command ) {
 		try {
-			ReportService.getReportInstance().assignCampaign( command );   
+			service.assignCampaign( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Campaign", exc );
@@ -238,7 +242,7 @@ public class ReportRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignCampaign")
 	public void unAssignCampaign( @RequestBody(required=true)  UnAssignCampaignFromReportCommand command ) {
 		try {
-			ReportService.getReportInstance().unAssignCampaign( command );   
+			service.unAssignCampaign( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Campaign", exc );
@@ -252,7 +256,7 @@ public class ReportRestController extends BaseSpringRestController {
 	@PutMapping("/assignLineItem")
 	public void assignLineItem( @RequestBody AssignLineItemToReportCommand command ) {
 		try {
-			ReportService.getReportInstance().assignLineItem( command );   
+			service.assignLineItem( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign LineItem", exc );
@@ -266,7 +270,7 @@ public class ReportRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignLineItem")
 	public void unAssignLineItem( @RequestBody(required=true)  UnAssignLineItemFromReportCommand command ) {
 		try {
-			ReportService.getReportInstance().unAssignLineItem( command );   
+			service.unAssignLineItem( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign LineItem", exc );
@@ -281,6 +285,7 @@ public class ReportRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Report report = null;
-    private static final Logger LOGGER = Logger.getLogger(ReportRestController.class.getName());
+	protected ReportService service = null;
+	private static final Logger LOGGER = Logger.getLogger(ReportRestController.class.getName());
     
 }

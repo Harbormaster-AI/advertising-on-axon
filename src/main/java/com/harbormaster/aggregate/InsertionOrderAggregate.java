@@ -76,11 +76,11 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateInsertionOrderEvent</li>
  *      <li>DeleteInsertionOrderEvent</li>
    *       <li>AssignAdvertiserToInsertionOrderEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignAdvertiserFromInsertionOrderEvent</li>
   *       <li>AssignAgencyToInsertionOrderEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignAgencyFromInsertionOrderEvent</li>
   *       <li>AssignPublisherToInsertionOrderEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignPublisherFromInsertionOrderEvent</li>
    *       <li>AssignCampaignsToInsertionOrderEvent</li>
  *       <li>RemoveCampaignsFromInsertionOrderEvent</li>
   *        </ul>

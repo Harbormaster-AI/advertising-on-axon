@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/ReportQuery")
 public class ReportQueryRestController extends BaseSpringRestController {
 	
+	public ReportQueryRestController( ReportService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a Report using a UUID
      * @param		UUID reportId
@@ -95,7 +99,7 @@ public class ReportQueryRestController extends BaseSpringRestController {
     	Report entity = null;
 
     	try {  
-    		entity = ReportService.getReportInstance().getReport( new ReportFetchOneSummary( reportId ) );
+    		entity = service.getReport( new ReportFetchOneSummary( reportId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Report using Id " + reportId );
@@ -115,7 +119,7 @@ public class ReportQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the Report
-            reportList = ReportService.getReportInstance().getAllReport();
+            reportList = service.getAllReport();
             
             if ( reportList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Reports" );
@@ -135,6 +139,7 @@ public class ReportQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Report report = null;
+    protected ReportService service = null;
     private static final Logger LOGGER = Logger.getLogger(ReportQueryRestController.class.getName());
     
 }

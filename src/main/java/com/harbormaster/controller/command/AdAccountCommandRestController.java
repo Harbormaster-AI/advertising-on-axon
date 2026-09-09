@@ -100,7 +100,6 @@ public class AdAccountCommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateAdAccountCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createAdAccount( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class AdAccountCommandRestController extends BaseSpringRestController {
 		DeleteAdAccountCommand command = new DeleteAdAccountCommand( adAccountId );
 
     	try {
-        	AdAccountService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted AdAccount with key " + command.getAdAccountId() );
         }
         catch( Throwable exc ) {

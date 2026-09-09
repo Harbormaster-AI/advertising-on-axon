@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/CreativeApprovalQuery")
 public class CreativeApprovalQueryRestController extends BaseSpringRestController {
 	
+	public CreativeApprovalQueryRestController( CreativeApprovalService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a CreativeApproval using a UUID
      * @param		UUID creativeApprovalId
@@ -95,7 +99,7 @@ public class CreativeApprovalQueryRestController extends BaseSpringRestControlle
     	CreativeApproval entity = null;
 
     	try {  
-    		entity = CreativeApprovalService.getCreativeApprovalInstance().getCreativeApproval( new CreativeApprovalFetchOneSummary( creativeApprovalId ) );
+    		entity = service.getCreativeApproval( new CreativeApprovalFetchOneSummary( creativeApprovalId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load CreativeApproval using Id " + creativeApprovalId );
@@ -115,7 +119,7 @@ public class CreativeApprovalQueryRestController extends BaseSpringRestControlle
         
     	try {
             // load the CreativeApproval
-            creativeApprovalList = CreativeApprovalService.getCreativeApprovalInstance().getAllCreativeApproval();
+            creativeApprovalList = service.getAllCreativeApproval();
             
             if ( creativeApprovalList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all CreativeApprovals" );
@@ -135,6 +139,7 @@ public class CreativeApprovalQueryRestController extends BaseSpringRestControlle
 // Attributes
 //************************************************************************
     protected CreativeApproval creativeApproval = null;
+    protected CreativeApprovalService service = null;
     private static final Logger LOGGER = Logger.getLogger(CreativeApprovalQueryRestController.class.getName());
     
 }

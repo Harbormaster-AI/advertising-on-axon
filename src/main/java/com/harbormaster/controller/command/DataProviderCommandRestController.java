@@ -100,7 +100,6 @@ public class DataProviderCommandRestController extends BaseSpringRestController 
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateDataProviderCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createDataProvider( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class DataProviderCommandRestController extends BaseSpringRestController 
 		DeleteDataProviderCommand command = new DeleteDataProviderCommand( dataProviderId );
 
     	try {
-        	DataProviderService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted DataProvider with key " + command.getDataProviderId() );
         }
         catch( Throwable exc ) {

@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/KPIQuery")
 public class KPIQueryRestController extends BaseSpringRestController {
 	
+	public KPIQueryRestController( KPIService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a KPI using a UUID
      * @param		UUID kPIId
@@ -95,7 +99,7 @@ public class KPIQueryRestController extends BaseSpringRestController {
     	KPI entity = null;
 
     	try {  
-    		entity = KPIService.getKPIInstance().getKPI( new KPIFetchOneSummary( kPIId ) );
+    		entity = service.getKPI( new KPIFetchOneSummary( kPIId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load KPI using Id " + kPIId );
@@ -115,7 +119,7 @@ public class KPIQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the KPI
-            kPIList = KPIService.getKPIInstance().getAllKPI();
+            kPIList = service.getAllKPI();
             
             if ( kPIList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all KPIs" );
@@ -135,6 +139,7 @@ public class KPIQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected KPI kPI = null;
+    protected KPIService service = null;
     private static final Logger LOGGER = Logger.getLogger(KPIQueryRestController.class.getName());
     
 }

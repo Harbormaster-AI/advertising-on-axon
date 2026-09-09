@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/InsertionOrderQuery")
 public class InsertionOrderQueryRestController extends BaseSpringRestController {
 	
+	public InsertionOrderQueryRestController( InsertionOrderService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a InsertionOrder using a UUID
      * @param		UUID insertionOrderId
@@ -95,7 +99,7 @@ public class InsertionOrderQueryRestController extends BaseSpringRestController 
     	InsertionOrder entity = null;
 
     	try {  
-    		entity = InsertionOrderService.getInsertionOrderInstance().getInsertionOrder( new InsertionOrderFetchOneSummary( insertionOrderId ) );
+    		entity = service.getInsertionOrder( new InsertionOrderFetchOneSummary( insertionOrderId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load InsertionOrder using Id " + insertionOrderId );
@@ -115,7 +119,7 @@ public class InsertionOrderQueryRestController extends BaseSpringRestController 
         
     	try {
             // load the InsertionOrder
-            insertionOrderList = InsertionOrderService.getInsertionOrderInstance().getAllInsertionOrder();
+            insertionOrderList = service.getAllInsertionOrder();
             
             if ( insertionOrderList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all InsertionOrders" );
@@ -135,6 +139,7 @@ public class InsertionOrderQueryRestController extends BaseSpringRestController 
 // Attributes
 //************************************************************************
     protected InsertionOrder insertionOrder = null;
+    protected InsertionOrderService service = null;
     private static final Logger LOGGER = Logger.getLogger(InsertionOrderQueryRestController.class.getName());
     
 }

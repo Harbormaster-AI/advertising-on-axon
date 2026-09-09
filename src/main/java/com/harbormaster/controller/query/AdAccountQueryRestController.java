@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/AdAccountQuery")
 public class AdAccountQueryRestController extends BaseSpringRestController {
 	
+	public AdAccountQueryRestController( AdAccountService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a AdAccount using a UUID
      * @param		UUID adAccountId
@@ -95,7 +99,7 @@ public class AdAccountQueryRestController extends BaseSpringRestController {
     	AdAccount entity = null;
 
     	try {  
-    		entity = AdAccountService.getAdAccountInstance().getAdAccount( new AdAccountFetchOneSummary( adAccountId ) );
+    		entity = service.getAdAccount( new AdAccountFetchOneSummary( adAccountId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load AdAccount using Id " + adAccountId );
@@ -115,7 +119,7 @@ public class AdAccountQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the AdAccount
-            adAccountList = AdAccountService.getAdAccountInstance().getAllAdAccount();
+            adAccountList = service.getAllAdAccount();
             
             if ( adAccountList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all AdAccounts" );
@@ -135,6 +139,7 @@ public class AdAccountQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected AdAccount adAccount = null;
+    protected AdAccountService service = null;
     private static final Logger LOGGER = Logger.getLogger(AdAccountQueryRestController.class.getName());
     
 }

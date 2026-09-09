@@ -79,7 +79,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateInventorySourceEvent</li>
  *      <li>DeleteInventorySourceEvent</li>
    *       <li>AssignPublisherToInventorySourceEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignPublisherFromInventorySourceEvent</li>
    *       <li>AssignAdSlotsToInventorySourceEvent</li>
  *       <li>RemoveAdSlotsFromInventorySourceEvent</li>
   *       <li>AssignDealsToInventorySourceEvent</li>

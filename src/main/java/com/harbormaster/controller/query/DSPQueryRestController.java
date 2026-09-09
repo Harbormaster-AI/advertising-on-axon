@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/DSPQuery")
 public class DSPQueryRestController extends BaseSpringRestController {
 	
+	public DSPQueryRestController( DSPService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a DSP using a UUID
      * @param		UUID dSPId
@@ -95,7 +99,7 @@ public class DSPQueryRestController extends BaseSpringRestController {
     	DSP entity = null;
 
     	try {  
-    		entity = DSPService.getDSPInstance().getDSP( new DSPFetchOneSummary( dSPId ) );
+    		entity = service.getDSP( new DSPFetchOneSummary( dSPId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load DSP using Id " + dSPId );
@@ -115,7 +119,7 @@ public class DSPQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the DSP
-            dSPList = DSPService.getDSPInstance().getAllDSP();
+            dSPList = service.getAllDSP();
             
             if ( dSPList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all DSPs" );
@@ -135,6 +139,7 @@ public class DSPQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected DSP dSP = null;
+    protected DSPService service = null;
     private static final Logger LOGGER = Logger.getLogger(DSPQueryRestController.class.getName());
     
 }

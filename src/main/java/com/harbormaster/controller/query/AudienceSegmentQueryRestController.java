@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/AudienceSegmentQuery")
 public class AudienceSegmentQueryRestController extends BaseSpringRestController {
 	
+	public AudienceSegmentQueryRestController( AudienceSegmentService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a AudienceSegment using a UUID
      * @param		UUID audienceSegmentId
@@ -95,7 +99,7 @@ public class AudienceSegmentQueryRestController extends BaseSpringRestController
     	AudienceSegment entity = null;
 
     	try {  
-    		entity = AudienceSegmentService.getAudienceSegmentInstance().getAudienceSegment( new AudienceSegmentFetchOneSummary( audienceSegmentId ) );
+    		entity = service.getAudienceSegment( new AudienceSegmentFetchOneSummary( audienceSegmentId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load AudienceSegment using Id " + audienceSegmentId );
@@ -115,7 +119,7 @@ public class AudienceSegmentQueryRestController extends BaseSpringRestController
         
     	try {
             // load the AudienceSegment
-            audienceSegmentList = AudienceSegmentService.getAudienceSegmentInstance().getAllAudienceSegment();
+            audienceSegmentList = service.getAllAudienceSegment();
             
             if ( audienceSegmentList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all AudienceSegments" );
@@ -135,6 +139,7 @@ public class AudienceSegmentQueryRestController extends BaseSpringRestController
 // Attributes
 //************************************************************************
     protected AudienceSegment audienceSegment = null;
+    protected AudienceSegmentService service = null;
     private static final Logger LOGGER = Logger.getLogger(AudienceSegmentQueryRestController.class.getName());
     
 }

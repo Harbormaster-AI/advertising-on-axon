@@ -100,7 +100,6 @@ public class BrandSafetyPolicyCommandRestController extends BaseSpringRestContro
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateBrandSafetyPolicyCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createBrandSafetyPolicy( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class BrandSafetyPolicyCommandRestController extends BaseSpringRestContro
 		DeleteBrandSafetyPolicyCommand command = new DeleteBrandSafetyPolicyCommand( brandSafetyPolicyId );
 
     	try {
-        	BrandSafetyPolicyService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted BrandSafetyPolicy with key " + command.getBrandSafetyPolicyId() );
         }
         catch( Throwable exc ) {

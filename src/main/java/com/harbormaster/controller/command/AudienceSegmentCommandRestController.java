@@ -100,7 +100,6 @@ public class AudienceSegmentCommandRestController extends BaseSpringRestControll
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateAudienceSegmentCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createAudienceSegment( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class AudienceSegmentCommandRestController extends BaseSpringRestControll
 		DeleteAudienceSegmentCommand command = new DeleteAudienceSegmentCommand( audienceSegmentId );
 
     	try {
-        	AudienceSegmentService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted AudienceSegment with key " + command.getAudienceSegmentId() );
         }
         catch( Throwable exc ) {

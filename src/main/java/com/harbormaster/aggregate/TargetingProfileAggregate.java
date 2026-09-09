@@ -93,7 +93,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateTargetingProfileEvent</li>
  *      <li>DeleteTargetingProfileEvent</li>
    *       <li>AssignBrandSafetyPolicyToTargetingProfileEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignBrandSafetyPolicyFromTargetingProfileEvent</li>
    *       <li>AssignAudienceSegmentsToTargetingProfileEvent</li>
  *       <li>RemoveAudienceSegmentsFromTargetingProfileEvent</li>
   *       <li>AssignGeoRegionsToTargetingProfileEvent</li>

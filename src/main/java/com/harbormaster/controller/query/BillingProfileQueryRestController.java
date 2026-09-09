@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/BillingProfileQuery")
 public class BillingProfileQueryRestController extends BaseSpringRestController {
 	
+	public BillingProfileQueryRestController( BillingProfileService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a BillingProfile using a UUID
      * @param		UUID billingProfileId
@@ -95,7 +99,7 @@ public class BillingProfileQueryRestController extends BaseSpringRestController 
     	BillingProfile entity = null;
 
     	try {  
-    		entity = BillingProfileService.getBillingProfileInstance().getBillingProfile( new BillingProfileFetchOneSummary( billingProfileId ) );
+    		entity = service.getBillingProfile( new BillingProfileFetchOneSummary( billingProfileId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load BillingProfile using Id " + billingProfileId );
@@ -115,7 +119,7 @@ public class BillingProfileQueryRestController extends BaseSpringRestController 
         
     	try {
             // load the BillingProfile
-            billingProfileList = BillingProfileService.getBillingProfileInstance().getAllBillingProfile();
+            billingProfileList = service.getAllBillingProfile();
             
             if ( billingProfileList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all BillingProfiles" );
@@ -135,6 +139,7 @@ public class BillingProfileQueryRestController extends BaseSpringRestController 
 // Attributes
 //************************************************************************
     protected BillingProfile billingProfile = null;
+    protected BillingProfileService service = null;
     private static final Logger LOGGER = Logger.getLogger(BillingProfileQueryRestController.class.getName());
     
 }

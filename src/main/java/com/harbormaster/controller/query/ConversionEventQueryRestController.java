@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/ConversionEventQuery")
 public class ConversionEventQueryRestController extends BaseSpringRestController {
 	
+	public ConversionEventQueryRestController( ConversionEventService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a ConversionEvent using a UUID
      * @param		UUID conversionEventId
@@ -95,7 +99,7 @@ public class ConversionEventQueryRestController extends BaseSpringRestController
     	ConversionEvent entity = null;
 
     	try {  
-    		entity = ConversionEventService.getConversionEventInstance().getConversionEvent( new ConversionEventFetchOneSummary( conversionEventId ) );
+    		entity = service.getConversionEvent( new ConversionEventFetchOneSummary( conversionEventId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load ConversionEvent using Id " + conversionEventId );
@@ -115,7 +119,7 @@ public class ConversionEventQueryRestController extends BaseSpringRestController
         
     	try {
             // load the ConversionEvent
-            conversionEventList = ConversionEventService.getConversionEventInstance().getAllConversionEvent();
+            conversionEventList = service.getAllConversionEvent();
             
             if ( conversionEventList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all ConversionEvents" );
@@ -135,6 +139,7 @@ public class ConversionEventQueryRestController extends BaseSpringRestController
 // Attributes
 //************************************************************************
     protected ConversionEvent conversionEvent = null;
+    protected ConversionEventService service = null;
     private static final Logger LOGGER = Logger.getLogger(ConversionEventQueryRestController.class.getName());
     
 }

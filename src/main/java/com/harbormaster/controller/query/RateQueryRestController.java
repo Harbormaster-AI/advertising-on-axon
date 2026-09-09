@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/RateQuery")
 public class RateQueryRestController extends BaseSpringRestController {
 	
+	public RateQueryRestController( RateService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a Rate using a UUID
      * @param		UUID rateId
@@ -95,7 +99,7 @@ public class RateQueryRestController extends BaseSpringRestController {
     	Rate entity = null;
 
     	try {  
-    		entity = RateService.getRateInstance().getRate( new RateFetchOneSummary( rateId ) );
+    		entity = service.getRate( new RateFetchOneSummary( rateId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Rate using Id " + rateId );
@@ -115,7 +119,7 @@ public class RateQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the Rate
-            rateList = RateService.getRateInstance().getAllRate();
+            rateList = service.getAllRate();
             
             if ( rateList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Rates" );
@@ -135,6 +139,7 @@ public class RateQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Rate rate = null;
+    protected RateService service = null;
     private static final Logger LOGGER = Logger.getLogger(RateQueryRestController.class.getName());
     
 }

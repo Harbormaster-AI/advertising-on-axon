@@ -67,9 +67,9 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateRateEvent</li>
  *      <li>DeleteRateEvent</li>
    *       <li>AssignRateCardToRateEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignRateCardFromRateEvent</li>
   *       <li>AssignAdSlotToRateEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignAdSlotFromRateEvent</li>
    *        </ul>
  *
  * <p>@author Harbormaster Dev Team</p>

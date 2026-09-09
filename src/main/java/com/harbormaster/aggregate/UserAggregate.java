@@ -79,7 +79,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateUserEvent</li>
  *      <li>DeleteUserEvent</li>
    *       <li>AssignAgencyToUserEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignAgencyFromUserEvent</li>
    *       <li>AssignTeamsToUserEvent</li>
  *       <li>RemoveTeamsFromUserEvent</li>
   *       <li>AssignAdAccountsToUserEvent</li>

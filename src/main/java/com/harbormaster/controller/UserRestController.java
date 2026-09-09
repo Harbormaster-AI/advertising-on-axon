@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/User")
 public class UserRestController extends BaseSpringRestController {
 
+	public UserRestController( UserService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a User.  if not key provided, calls create, otherwise calls save
      * @param		User	user
@@ -94,7 +98,7 @@ public class UserRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = UserService.getUserInstance().createUser( command );
+			completableFuture = service.createUser( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class UserRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateUserCommand
 			// -----------------------------------------------
-			completableFuture = UserService.getUserInstance().updateUser(command);;
+			completableFuture = service.updateUser(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "UserController:update() - successfully update User - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class UserRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteUserCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	UserService delegate = UserService.getUserInstance();
+        	UserService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted User with key " + command.getUserId() );
@@ -155,7 +159,7 @@ public class UserRestController extends BaseSpringRestController {
     	User entity = null;
 
     	try {  
-    		entity = UserService.getUserInstance().getUser( new UserFetchOneSummary( uuid ) );   
+    		entity = service.getUser( new UserFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load User using Id " + uuid );
@@ -175,7 +179,7 @@ public class UserRestController extends BaseSpringRestController {
         
     	try {
             // load the User
-            userList = UserService.getUserInstance().getAllUser();
+            userList = service.getAllUser();
             
             if ( userList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Users" );
@@ -196,7 +200,7 @@ public class UserRestController extends BaseSpringRestController {
 	@PutMapping("/assignAgency")
 	public void assignAgency( @RequestBody AssignAgencyToUserCommand command ) {
 		try {
-			UserService.getUserInstance().assignAgency( command );   
+			service.assignAgency( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Agency", exc );
@@ -210,7 +214,7 @@ public class UserRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAgency")
 	public void unAssignAgency( @RequestBody(required=true)  UnAssignAgencyFromUserCommand command ) {
 		try {
-			UserService.getUserInstance().unAssignAgency( command );   
+			service.unAssignAgency( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Agency", exc );
@@ -225,7 +229,7 @@ public class UserRestController extends BaseSpringRestController {
 	@PutMapping("/addToTeams")
 	public void addToTeams( @RequestBody(required=true) AssignTeamsToUserCommand command ) {
 		try {
-			UserService.getUserInstance().addToTeams( command );   
+			service.addToTeams( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Teams", exc );
@@ -240,7 +244,7 @@ public class UserRestController extends BaseSpringRestController {
 	public void removeFromTeams( 	@RequestBody(required=true) RemoveTeamsFromUserCommand command )
 	{		
 		try {
-			UserService.getUserInstance().removeFromTeams( command );
+			service.removeFromTeams( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Teams", exc );
@@ -254,7 +258,7 @@ public class UserRestController extends BaseSpringRestController {
 	@PutMapping("/addToAdAccounts")
 	public void addToAdAccounts( @RequestBody(required=true) AssignAdAccountsToUserCommand command ) {
 		try {
-			UserService.getUserInstance().addToAdAccounts( command );   
+			service.addToAdAccounts( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set AdAccounts", exc );
@@ -269,7 +273,7 @@ public class UserRestController extends BaseSpringRestController {
 	public void removeFromAdAccounts( 	@RequestBody(required=true) RemoveAdAccountsFromUserCommand command )
 	{		
 		try {
-			UserService.getUserInstance().removeFromAdAccounts( command );
+			service.removeFromAdAccounts( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set AdAccounts", exc );
@@ -283,6 +287,7 @@ public class UserRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected User user = null;
-    private static final Logger LOGGER = Logger.getLogger(UserRestController.class.getName());
+	protected UserService service = null;
+	private static final Logger LOGGER = Logger.getLogger(UserRestController.class.getName());
     
 }

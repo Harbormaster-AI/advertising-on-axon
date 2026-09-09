@@ -69,11 +69,11 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateConversionEventEvent</li>
  *      <li>DeleteConversionEventEvent</li>
    *       <li>AssignCampaignToConversionEventEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignCampaignFromConversionEventEvent</li>
   *       <li>AssignLineItemToConversionEventEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignLineItemFromConversionEventEvent</li>
   *       <li>AssignTrackingPixelToConversionEventEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignTrackingPixelFromConversionEventEvent</li>
    *        </ul>
  *
  * <p>@author Harbormaster Dev Team</p>
@@ -250,7 +250,7 @@ public class ConversionEventAggregate {
     @AggregateIdentifier
     private UUID conversionEventId;
     
-    private DateTime timestamp;
+    private  Date timestamp;
     private Money value;
     private ConversionEventType eventType;
     private AttributionModel attributionModel;

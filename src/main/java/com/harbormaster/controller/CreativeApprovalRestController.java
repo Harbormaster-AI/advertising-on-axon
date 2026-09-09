@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/CreativeApproval")
 public class CreativeApprovalRestController extends BaseSpringRestController {
 
+	public CreativeApprovalRestController( CreativeApprovalService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a CreativeApproval.  if not key provided, calls create, otherwise calls save
      * @param		CreativeApproval	creativeApproval
@@ -94,7 +98,7 @@ public class CreativeApprovalRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = CreativeApprovalService.getCreativeApprovalInstance().createCreativeApproval( command );
+			completableFuture = service.createCreativeApproval( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class CreativeApprovalRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateCreativeApprovalCommand
 			// -----------------------------------------------
-			completableFuture = CreativeApprovalService.getCreativeApprovalInstance().updateCreativeApproval(command);;
+			completableFuture = service.updateCreativeApproval(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "CreativeApprovalController:update() - successfully update CreativeApproval - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class CreativeApprovalRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteCreativeApprovalCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	CreativeApprovalService delegate = CreativeApprovalService.getCreativeApprovalInstance();
+        	CreativeApprovalService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted CreativeApproval with key " + command.getCreativeApprovalId() );
@@ -155,7 +159,7 @@ public class CreativeApprovalRestController extends BaseSpringRestController {
     	CreativeApproval entity = null;
 
     	try {  
-    		entity = CreativeApprovalService.getCreativeApprovalInstance().getCreativeApproval( new CreativeApprovalFetchOneSummary( uuid ) );   
+    		entity = service.getCreativeApproval( new CreativeApprovalFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load CreativeApproval using Id " + uuid );
@@ -175,7 +179,7 @@ public class CreativeApprovalRestController extends BaseSpringRestController {
         
     	try {
             // load the CreativeApproval
-            creativeApprovalList = CreativeApprovalService.getCreativeApprovalInstance().getAllCreativeApproval();
+            creativeApprovalList = service.getAllCreativeApproval();
             
             if ( creativeApprovalList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all CreativeApprovals" );
@@ -196,7 +200,7 @@ public class CreativeApprovalRestController extends BaseSpringRestController {
 	@PutMapping("/assignCreativeAsset")
 	public void assignCreativeAsset( @RequestBody AssignCreativeAssetToCreativeApprovalCommand command ) {
 		try {
-			CreativeApprovalService.getCreativeApprovalInstance().assignCreativeAsset( command );   
+			service.assignCreativeAsset( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign CreativeAsset", exc );
@@ -210,7 +214,7 @@ public class CreativeApprovalRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignCreativeAsset")
 	public void unAssignCreativeAsset( @RequestBody(required=true)  UnAssignCreativeAssetFromCreativeApprovalCommand command ) {
 		try {
-			CreativeApprovalService.getCreativeApprovalInstance().unAssignCreativeAsset( command );   
+			service.unAssignCreativeAsset( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign CreativeAsset", exc );
@@ -224,7 +228,7 @@ public class CreativeApprovalRestController extends BaseSpringRestController {
 	@PutMapping("/assignPublisher")
 	public void assignPublisher( @RequestBody AssignPublisherToCreativeApprovalCommand command ) {
 		try {
-			CreativeApprovalService.getCreativeApprovalInstance().assignPublisher( command );   
+			service.assignPublisher( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Publisher", exc );
@@ -238,7 +242,7 @@ public class CreativeApprovalRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignPublisher")
 	public void unAssignPublisher( @RequestBody(required=true)  UnAssignPublisherFromCreativeApprovalCommand command ) {
 		try {
-			CreativeApprovalService.getCreativeApprovalInstance().unAssignPublisher( command );   
+			service.unAssignPublisher( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Publisher", exc );
@@ -253,6 +257,7 @@ public class CreativeApprovalRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected CreativeApproval creativeApproval = null;
-    private static final Logger LOGGER = Logger.getLogger(CreativeApprovalRestController.class.getName());
+	protected CreativeApprovalService service = null;
+	private static final Logger LOGGER = Logger.getLogger(CreativeApprovalRestController.class.getName());
     
 }

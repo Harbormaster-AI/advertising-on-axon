@@ -100,7 +100,6 @@ public class KPICommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateKPICommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createKPI( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class KPICommandRestController extends BaseSpringRestController {
 		DeleteKPICommand command = new DeleteKPICommand( kPIId );
 
     	try {
-        	KPIService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted KPI with key " + command.getKPIId() );
         }
         catch( Throwable exc ) {

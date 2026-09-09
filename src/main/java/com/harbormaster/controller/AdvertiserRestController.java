@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Advertiser")
 public class AdvertiserRestController extends BaseSpringRestController {
 
+	public AdvertiserRestController( AdvertiserService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a Advertiser.  if not key provided, calls create, otherwise calls save
      * @param		Advertiser	advertiser
@@ -94,7 +98,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = AdvertiserService.getAdvertiserInstance().createAdvertiser( command );
+			completableFuture = service.createAdvertiser( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateAdvertiserCommand
 			// -----------------------------------------------
-			completableFuture = AdvertiserService.getAdvertiserInstance().updateAdvertiser(command);;
+			completableFuture = service.updateAdvertiser(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "AdvertiserController:update() - successfully update Advertiser - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteAdvertiserCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	AdvertiserService delegate = AdvertiserService.getAdvertiserInstance();
+        	AdvertiserService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Advertiser with key " + command.getAdvertiserId() );
@@ -155,7 +159,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
     	Advertiser entity = null;
 
     	try {  
-    		entity = AdvertiserService.getAdvertiserInstance().getAdvertiser( new AdvertiserFetchOneSummary( uuid ) );   
+    		entity = service.getAdvertiser( new AdvertiserFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Advertiser using Id " + uuid );
@@ -175,7 +179,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
         
     	try {
             // load the Advertiser
-            advertiserList = AdvertiserService.getAdvertiserInstance().getAllAdvertiser();
+            advertiserList = service.getAllAdvertiser();
             
             if ( advertiserList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Advertisers" );
@@ -196,7 +200,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
 	@PutMapping("/assignAgency")
 	public void assignAgency( @RequestBody AssignAgencyToAdvertiserCommand command ) {
 		try {
-			AdvertiserService.getAdvertiserInstance().assignAgency( command );   
+			service.assignAgency( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Agency", exc );
@@ -210,7 +214,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAgency")
 	public void unAssignAgency( @RequestBody(required=true)  UnAssignAgencyFromAdvertiserCommand command ) {
 		try {
-			AdvertiserService.getAdvertiserInstance().unAssignAgency( command );   
+			service.unAssignAgency( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Agency", exc );
@@ -225,7 +229,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
 	@PutMapping("/addToAdAccounts")
 	public void addToAdAccounts( @RequestBody(required=true) AssignAdAccountsToAdvertiserCommand command ) {
 		try {
-			AdvertiserService.getAdvertiserInstance().addToAdAccounts( command );   
+			service.addToAdAccounts( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set AdAccounts", exc );
@@ -240,7 +244,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
 	public void removeFromAdAccounts( 	@RequestBody(required=true) RemoveAdAccountsFromAdvertiserCommand command )
 	{		
 		try {
-			AdvertiserService.getAdvertiserInstance().removeFromAdAccounts( command );
+			service.removeFromAdAccounts( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set AdAccounts", exc );
@@ -254,7 +258,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
 	@PutMapping("/addToBillingProfiles")
 	public void addToBillingProfiles( @RequestBody(required=true) AssignBillingProfilesToAdvertiserCommand command ) {
 		try {
-			AdvertiserService.getAdvertiserInstance().addToBillingProfiles( command );   
+			service.addToBillingProfiles( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set BillingProfiles", exc );
@@ -269,7 +273,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
 	public void removeFromBillingProfiles( 	@RequestBody(required=true) RemoveBillingProfilesFromAdvertiserCommand command )
 	{		
 		try {
-			AdvertiserService.getAdvertiserInstance().removeFromBillingProfiles( command );
+			service.removeFromBillingProfiles( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set BillingProfiles", exc );
@@ -283,7 +287,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
 	@PutMapping("/addToCampaigns")
 	public void addToCampaigns( @RequestBody(required=true) AssignCampaignsToAdvertiserCommand command ) {
 		try {
-			AdvertiserService.getAdvertiserInstance().addToCampaigns( command );   
+			service.addToCampaigns( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Campaigns", exc );
@@ -298,7 +302,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
 	public void removeFromCampaigns( 	@RequestBody(required=true) RemoveCampaignsFromAdvertiserCommand command )
 	{		
 		try {
-			AdvertiserService.getAdvertiserInstance().removeFromCampaigns( command );
+			service.removeFromCampaigns( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Campaigns", exc );
@@ -312,7 +316,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
 	@PutMapping("/addToTrackingPixels")
 	public void addToTrackingPixels( @RequestBody(required=true) AssignTrackingPixelsToAdvertiserCommand command ) {
 		try {
-			AdvertiserService.getAdvertiserInstance().addToTrackingPixels( command );   
+			service.addToTrackingPixels( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set TrackingPixels", exc );
@@ -327,7 +331,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
 	public void removeFromTrackingPixels( 	@RequestBody(required=true) RemoveTrackingPixelsFromAdvertiserCommand command )
 	{		
 		try {
-			AdvertiserService.getAdvertiserInstance().removeFromTrackingPixels( command );
+			service.removeFromTrackingPixels( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set TrackingPixels", exc );
@@ -341,6 +345,7 @@ public class AdvertiserRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Advertiser advertiser = null;
-    private static final Logger LOGGER = Logger.getLogger(AdvertiserRestController.class.getName());
+	protected AdvertiserService service = null;
+	private static final Logger LOGGER = Logger.getLogger(AdvertiserRestController.class.getName());
     
 }

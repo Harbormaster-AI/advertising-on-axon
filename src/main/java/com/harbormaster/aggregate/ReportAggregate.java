@@ -69,11 +69,11 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateReportEvent</li>
  *      <li>DeleteReportEvent</li>
    *       <li>AssignAdAccountToReportEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignAdAccountFromReportEvent</li>
   *       <li>AssignCampaignToReportEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignCampaignFromReportEvent</li>
   *       <li>AssignLineItemToReportEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignLineItemFromReportEvent</li>
    *        </ul>
  *
  * <p>@author Harbormaster Dev Team</p>
@@ -251,7 +251,7 @@ public class ReportAggregate {
     private UUID reportId;
     
     private String reportName;
-    private DateTime generatedAt;
+    private  Date generatedAt;
     private URL fileUrl;
     private ReportType reportType;
     private AdAccount adAccount = null;

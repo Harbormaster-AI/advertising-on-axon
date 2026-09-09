@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/TargetingProfileQuery")
 public class TargetingProfileQueryRestController extends BaseSpringRestController {
 	
+	public TargetingProfileQueryRestController( TargetingProfileService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a TargetingProfile using a UUID
      * @param		UUID targetingProfileId
@@ -95,7 +99,7 @@ public class TargetingProfileQueryRestController extends BaseSpringRestControlle
     	TargetingProfile entity = null;
 
     	try {  
-    		entity = TargetingProfileService.getTargetingProfileInstance().getTargetingProfile( new TargetingProfileFetchOneSummary( targetingProfileId ) );
+    		entity = service.getTargetingProfile( new TargetingProfileFetchOneSummary( targetingProfileId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load TargetingProfile using Id " + targetingProfileId );
@@ -115,7 +119,7 @@ public class TargetingProfileQueryRestController extends BaseSpringRestControlle
         
     	try {
             // load the TargetingProfile
-            targetingProfileList = TargetingProfileService.getTargetingProfileInstance().getAllTargetingProfile();
+            targetingProfileList = service.getAllTargetingProfile();
             
             if ( targetingProfileList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all TargetingProfiles" );
@@ -135,6 +139,7 @@ public class TargetingProfileQueryRestController extends BaseSpringRestControlle
 // Attributes
 //************************************************************************
     protected TargetingProfile targetingProfile = null;
+    protected TargetingProfileService service = null;
     private static final Logger LOGGER = Logger.getLogger(TargetingProfileQueryRestController.class.getName());
     
 }

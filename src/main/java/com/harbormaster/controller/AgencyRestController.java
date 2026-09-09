@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Agency")
 public class AgencyRestController extends BaseSpringRestController {
 
+	public AgencyRestController( AgencyService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a Agency.  if not key provided, calls create, otherwise calls save
      * @param		Agency	agency
@@ -94,7 +98,7 @@ public class AgencyRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = AgencyService.getAgencyInstance().createAgency( command );
+			completableFuture = service.createAgency( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class AgencyRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateAgencyCommand
 			// -----------------------------------------------
-			completableFuture = AgencyService.getAgencyInstance().updateAgency(command);;
+			completableFuture = service.updateAgency(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "AgencyController:update() - successfully update Agency - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class AgencyRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteAgencyCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	AgencyService delegate = AgencyService.getAgencyInstance();
+        	AgencyService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Agency with key " + command.getAgencyId() );
@@ -155,7 +159,7 @@ public class AgencyRestController extends BaseSpringRestController {
     	Agency entity = null;
 
     	try {  
-    		entity = AgencyService.getAgencyInstance().getAgency( new AgencyFetchOneSummary( uuid ) );   
+    		entity = service.getAgency( new AgencyFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Agency using Id " + uuid );
@@ -175,7 +179,7 @@ public class AgencyRestController extends BaseSpringRestController {
         
     	try {
             // load the Agency
-            agencyList = AgencyService.getAgencyInstance().getAllAgency();
+            agencyList = service.getAllAgency();
             
             if ( agencyList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Agencys" );
@@ -197,7 +201,7 @@ public class AgencyRestController extends BaseSpringRestController {
 	@PutMapping("/addToAdvertisers")
 	public void addToAdvertisers( @RequestBody(required=true) AssignAdvertisersToAgencyCommand command ) {
 		try {
-			AgencyService.getAgencyInstance().addToAdvertisers( command );   
+			service.addToAdvertisers( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Advertisers", exc );
@@ -212,7 +216,7 @@ public class AgencyRestController extends BaseSpringRestController {
 	public void removeFromAdvertisers( 	@RequestBody(required=true) RemoveAdvertisersFromAgencyCommand command )
 	{		
 		try {
-			AgencyService.getAgencyInstance().removeFromAdvertisers( command );
+			service.removeFromAdvertisers( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Advertisers", exc );
@@ -226,7 +230,7 @@ public class AgencyRestController extends BaseSpringRestController {
 	@PutMapping("/addToTeams")
 	public void addToTeams( @RequestBody(required=true) AssignTeamsToAgencyCommand command ) {
 		try {
-			AgencyService.getAgencyInstance().addToTeams( command );   
+			service.addToTeams( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Teams", exc );
@@ -241,7 +245,7 @@ public class AgencyRestController extends BaseSpringRestController {
 	public void removeFromTeams( 	@RequestBody(required=true) RemoveTeamsFromAgencyCommand command )
 	{		
 		try {
-			AgencyService.getAgencyInstance().removeFromTeams( command );
+			service.removeFromTeams( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Teams", exc );
@@ -255,7 +259,7 @@ public class AgencyRestController extends BaseSpringRestController {
 	@PutMapping("/addToUsers")
 	public void addToUsers( @RequestBody(required=true) AssignUsersToAgencyCommand command ) {
 		try {
-			AgencyService.getAgencyInstance().addToUsers( command );   
+			service.addToUsers( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Users", exc );
@@ -270,7 +274,7 @@ public class AgencyRestController extends BaseSpringRestController {
 	public void removeFromUsers( 	@RequestBody(required=true) RemoveUsersFromAgencyCommand command )
 	{		
 		try {
-			AgencyService.getAgencyInstance().removeFromUsers( command );
+			service.removeFromUsers( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Users", exc );
@@ -284,7 +288,7 @@ public class AgencyRestController extends BaseSpringRestController {
 	@PutMapping("/addToInsertionOrders")
 	public void addToInsertionOrders( @RequestBody(required=true) AssignInsertionOrdersToAgencyCommand command ) {
 		try {
-			AgencyService.getAgencyInstance().addToInsertionOrders( command );   
+			service.addToInsertionOrders( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set InsertionOrders", exc );
@@ -299,7 +303,7 @@ public class AgencyRestController extends BaseSpringRestController {
 	public void removeFromInsertionOrders( 	@RequestBody(required=true) RemoveInsertionOrdersFromAgencyCommand command )
 	{		
 		try {
-			AgencyService.getAgencyInstance().removeFromInsertionOrders( command );
+			service.removeFromInsertionOrders( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set InsertionOrders", exc );
@@ -313,6 +317,7 @@ public class AgencyRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Agency agency = null;
-    private static final Logger LOGGER = Logger.getLogger(AgencyRestController.class.getName());
+	protected AgencyService service = null;
+	private static final Logger LOGGER = Logger.getLogger(AgencyRestController.class.getName());
     
 }

@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/PaymentMethod")
 public class PaymentMethodRestController extends BaseSpringRestController {
 
+	public PaymentMethodRestController( PaymentMethodService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a PaymentMethod.  if not key provided, calls create, otherwise calls save
      * @param		PaymentMethod	paymentMethod
@@ -94,7 +98,7 @@ public class PaymentMethodRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = PaymentMethodService.getPaymentMethodInstance().createPaymentMethod( command );
+			completableFuture = service.createPaymentMethod( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class PaymentMethodRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdatePaymentMethodCommand
 			// -----------------------------------------------
-			completableFuture = PaymentMethodService.getPaymentMethodInstance().updatePaymentMethod(command);;
+			completableFuture = service.updatePaymentMethod(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "PaymentMethodController:update() - successfully update PaymentMethod - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class PaymentMethodRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeletePaymentMethodCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	PaymentMethodService delegate = PaymentMethodService.getPaymentMethodInstance();
+        	PaymentMethodService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted PaymentMethod with key " + command.getPaymentMethodId() );
@@ -155,7 +159,7 @@ public class PaymentMethodRestController extends BaseSpringRestController {
     	PaymentMethod entity = null;
 
     	try {  
-    		entity = PaymentMethodService.getPaymentMethodInstance().getPaymentMethod( new PaymentMethodFetchOneSummary( uuid ) );   
+    		entity = service.getPaymentMethod( new PaymentMethodFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load PaymentMethod using Id " + uuid );
@@ -175,7 +179,7 @@ public class PaymentMethodRestController extends BaseSpringRestController {
         
     	try {
             // load the PaymentMethod
-            paymentMethodList = PaymentMethodService.getPaymentMethodInstance().getAllPaymentMethod();
+            paymentMethodList = service.getAllPaymentMethod();
             
             if ( paymentMethodList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all PaymentMethods" );
@@ -196,7 +200,7 @@ public class PaymentMethodRestController extends BaseSpringRestController {
 	@PutMapping("/assignBillingProfile")
 	public void assignBillingProfile( @RequestBody AssignBillingProfileToPaymentMethodCommand command ) {
 		try {
-			PaymentMethodService.getPaymentMethodInstance().assignBillingProfile( command );   
+			service.assignBillingProfile( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign BillingProfile", exc );
@@ -210,7 +214,7 @@ public class PaymentMethodRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignBillingProfile")
 	public void unAssignBillingProfile( @RequestBody(required=true)  UnAssignBillingProfileFromPaymentMethodCommand command ) {
 		try {
-			PaymentMethodService.getPaymentMethodInstance().unAssignBillingProfile( command );   
+			service.unAssignBillingProfile( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign BillingProfile", exc );
@@ -225,6 +229,7 @@ public class PaymentMethodRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected PaymentMethod paymentMethod = null;
-    private static final Logger LOGGER = Logger.getLogger(PaymentMethodRestController.class.getName());
+	protected PaymentMethodService service = null;
+	private static final Logger LOGGER = Logger.getLogger(PaymentMethodRestController.class.getName());
     
 }

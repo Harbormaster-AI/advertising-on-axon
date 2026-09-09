@@ -100,7 +100,6 @@ public class TrackingPixelCommandRestController extends BaseSpringRestController
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateTrackingPixelCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createTrackingPixel( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class TrackingPixelCommandRestController extends BaseSpringRestController
 		DeleteTrackingPixelCommand command = new DeleteTrackingPixelCommand( trackingPixelId );
 
     	try {
-        	TrackingPixelService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted TrackingPixel with key " + command.getTrackingPixelId() );
         }
         catch( Throwable exc ) {

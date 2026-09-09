@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/CreativeAssetQuery")
 public class CreativeAssetQueryRestController extends BaseSpringRestController {
 	
+	public CreativeAssetQueryRestController( CreativeAssetService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a CreativeAsset using a UUID
      * @param		UUID creativeAssetId
@@ -95,7 +99,7 @@ public class CreativeAssetQueryRestController extends BaseSpringRestController {
     	CreativeAsset entity = null;
 
     	try {  
-    		entity = CreativeAssetService.getCreativeAssetInstance().getCreativeAsset( new CreativeAssetFetchOneSummary( creativeAssetId ) );
+    		entity = service.getCreativeAsset( new CreativeAssetFetchOneSummary( creativeAssetId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load CreativeAsset using Id " + creativeAssetId );
@@ -115,7 +119,7 @@ public class CreativeAssetQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the CreativeAsset
-            creativeAssetList = CreativeAssetService.getCreativeAssetInstance().getAllCreativeAsset();
+            creativeAssetList = service.getAllCreativeAsset();
             
             if ( creativeAssetList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all CreativeAssets" );
@@ -135,6 +139,7 @@ public class CreativeAssetQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected CreativeAsset creativeAsset = null;
+    protected CreativeAssetService service = null;
     private static final Logger LOGGER = Logger.getLogger(CreativeAssetQueryRestController.class.getName());
     
 }

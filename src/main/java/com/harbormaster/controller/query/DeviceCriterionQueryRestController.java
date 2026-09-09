@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/DeviceCriterionQuery")
 public class DeviceCriterionQueryRestController extends BaseSpringRestController {
 	
+	public DeviceCriterionQueryRestController( DeviceCriterionService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a DeviceCriterion using a UUID
      * @param		UUID deviceCriterionId
@@ -95,7 +99,7 @@ public class DeviceCriterionQueryRestController extends BaseSpringRestController
     	DeviceCriterion entity = null;
 
     	try {  
-    		entity = DeviceCriterionService.getDeviceCriterionInstance().getDeviceCriterion( new DeviceCriterionFetchOneSummary( deviceCriterionId ) );
+    		entity = service.getDeviceCriterion( new DeviceCriterionFetchOneSummary( deviceCriterionId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load DeviceCriterion using Id " + deviceCriterionId );
@@ -115,7 +119,7 @@ public class DeviceCriterionQueryRestController extends BaseSpringRestController
         
     	try {
             // load the DeviceCriterion
-            deviceCriterionList = DeviceCriterionService.getDeviceCriterionInstance().getAllDeviceCriterion();
+            deviceCriterionList = service.getAllDeviceCriterion();
             
             if ( deviceCriterionList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all DeviceCriterions" );
@@ -135,6 +139,7 @@ public class DeviceCriterionQueryRestController extends BaseSpringRestController
 // Attributes
 //************************************************************************
     protected DeviceCriterion deviceCriterion = null;
+    protected DeviceCriterionService service = null;
     private static final Logger LOGGER = Logger.getLogger(DeviceCriterionQueryRestController.class.getName());
     
 }

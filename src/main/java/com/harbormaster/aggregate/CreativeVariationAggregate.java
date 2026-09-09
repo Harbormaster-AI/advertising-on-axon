@@ -65,7 +65,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateCreativeVariationEvent</li>
  *      <li>DeleteCreativeVariationEvent</li>
    *       <li>AssignCreativeAssetToCreativeVariationEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignCreativeAssetFromCreativeVariationEvent</li>
    *        </ul>
  *
  * <p>@author Harbormaster Dev Team</p>

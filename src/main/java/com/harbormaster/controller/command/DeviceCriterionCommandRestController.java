@@ -100,7 +100,6 @@ public class DeviceCriterionCommandRestController extends BaseSpringRestControll
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateDeviceCriterionCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createDeviceCriterion( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class DeviceCriterionCommandRestController extends BaseSpringRestControll
 		DeleteDeviceCriterionCommand command = new DeleteDeviceCriterionCommand( deviceCriterionId );
 
     	try {
-        	DeviceCriterionService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted DeviceCriterion with key " + command.getDeviceCriterionId() );
         }
         catch( Throwable exc ) {

@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/DealQuery")
 public class DealQueryRestController extends BaseSpringRestController {
 	
+	public DealQueryRestController( DealService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a Deal using a UUID
      * @param		UUID dealId
@@ -95,7 +99,7 @@ public class DealQueryRestController extends BaseSpringRestController {
     	Deal entity = null;
 
     	try {  
-    		entity = DealService.getDealInstance().getDeal( new DealFetchOneSummary( dealId ) );
+    		entity = service.getDeal( new DealFetchOneSummary( dealId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Deal using Id " + dealId );
@@ -115,7 +119,7 @@ public class DealQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the Deal
-            dealList = DealService.getDealInstance().getAllDeal();
+            dealList = service.getAllDeal();
             
             if ( dealList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Deals" );
@@ -135,6 +139,7 @@ public class DealQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Deal deal = null;
+    protected DealService service = null;
     private static final Logger LOGGER = Logger.getLogger(DealQueryRestController.class.getName());
     
 }

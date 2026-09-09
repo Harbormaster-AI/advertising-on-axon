@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/LineItemQuery")
 public class LineItemQueryRestController extends BaseSpringRestController {
 	
+	public LineItemQueryRestController( LineItemService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a LineItem using a UUID
      * @param		UUID lineItemId
@@ -95,7 +99,7 @@ public class LineItemQueryRestController extends BaseSpringRestController {
     	LineItem entity = null;
 
     	try {  
-    		entity = LineItemService.getLineItemInstance().getLineItem( new LineItemFetchOneSummary( lineItemId ) );
+    		entity = service.getLineItem( new LineItemFetchOneSummary( lineItemId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load LineItem using Id " + lineItemId );
@@ -115,7 +119,7 @@ public class LineItemQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the LineItem
-            lineItemList = LineItemService.getLineItemInstance().getAllLineItem();
+            lineItemList = service.getAllLineItem();
             
             if ( lineItemList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all LineItems" );
@@ -135,6 +139,7 @@ public class LineItemQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected LineItem lineItem = null;
+    protected LineItemService service = null;
     private static final Logger LOGGER = Logger.getLogger(LineItemQueryRestController.class.getName());
     
 }

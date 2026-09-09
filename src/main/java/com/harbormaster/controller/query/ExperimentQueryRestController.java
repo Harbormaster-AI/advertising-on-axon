@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/ExperimentQuery")
 public class ExperimentQueryRestController extends BaseSpringRestController {
 	
+	public ExperimentQueryRestController( ExperimentService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a Experiment using a UUID
      * @param		UUID experimentId
@@ -95,7 +99,7 @@ public class ExperimentQueryRestController extends BaseSpringRestController {
     	Experiment entity = null;
 
     	try {  
-    		entity = ExperimentService.getExperimentInstance().getExperiment( new ExperimentFetchOneSummary( experimentId ) );
+    		entity = service.getExperiment( new ExperimentFetchOneSummary( experimentId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Experiment using Id " + experimentId );
@@ -115,7 +119,7 @@ public class ExperimentQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the Experiment
-            experimentList = ExperimentService.getExperimentInstance().getAllExperiment();
+            experimentList = service.getAllExperiment();
             
             if ( experimentList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Experiments" );
@@ -135,6 +139,7 @@ public class ExperimentQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Experiment experiment = null;
+    protected ExperimentService service = null;
     private static final Logger LOGGER = Logger.getLogger(ExperimentQueryRestController.class.getName());
     
 }

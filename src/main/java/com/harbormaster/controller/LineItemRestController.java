@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/LineItem")
 public class LineItemRestController extends BaseSpringRestController {
 
+	public LineItemRestController( LineItemService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a LineItem.  if not key provided, calls create, otherwise calls save
      * @param		LineItem	lineItem
@@ -94,7 +98,7 @@ public class LineItemRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = LineItemService.getLineItemInstance().createLineItem( command );
+			completableFuture = service.createLineItem( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class LineItemRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateLineItemCommand
 			// -----------------------------------------------
-			completableFuture = LineItemService.getLineItemInstance().updateLineItem(command);;
+			completableFuture = service.updateLineItem(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "LineItemController:update() - successfully update LineItem - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class LineItemRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteLineItemCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	LineItemService delegate = LineItemService.getLineItemInstance();
+        	LineItemService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted LineItem with key " + command.getLineItemId() );
@@ -155,7 +159,7 @@ public class LineItemRestController extends BaseSpringRestController {
     	LineItem entity = null;
 
     	try {  
-    		entity = LineItemService.getLineItemInstance().getLineItem( new LineItemFetchOneSummary( uuid ) );   
+    		entity = service.getLineItem( new LineItemFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load LineItem using Id " + uuid );
@@ -175,7 +179,7 @@ public class LineItemRestController extends BaseSpringRestController {
         
     	try {
             // load the LineItem
-            lineItemList = LineItemService.getLineItemInstance().getAllLineItem();
+            lineItemList = service.getAllLineItem();
             
             if ( lineItemList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all LineItems" );
@@ -196,7 +200,7 @@ public class LineItemRestController extends BaseSpringRestController {
 	@PutMapping("/assignCampaign")
 	public void assignCampaign( @RequestBody AssignCampaignToLineItemCommand command ) {
 		try {
-			LineItemService.getLineItemInstance().assignCampaign( command );   
+			service.assignCampaign( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Campaign", exc );
@@ -210,7 +214,7 @@ public class LineItemRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignCampaign")
 	public void unAssignCampaign( @RequestBody(required=true)  UnAssignCampaignFromLineItemCommand command ) {
 		try {
-			LineItemService.getLineItemInstance().unAssignCampaign( command );   
+			service.unAssignCampaign( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Campaign", exc );
@@ -224,7 +228,7 @@ public class LineItemRestController extends BaseSpringRestController {
 	@PutMapping("/assignTargetingProfile")
 	public void assignTargetingProfile( @RequestBody AssignTargetingProfileToLineItemCommand command ) {
 		try {
-			LineItemService.getLineItemInstance().assignTargetingProfile( command );   
+			service.assignTargetingProfile( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign TargetingProfile", exc );
@@ -238,7 +242,7 @@ public class LineItemRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignTargetingProfile")
 	public void unAssignTargetingProfile( @RequestBody(required=true)  UnAssignTargetingProfileFromLineItemCommand command ) {
 		try {
-			LineItemService.getLineItemInstance().unAssignTargetingProfile( command );   
+			service.unAssignTargetingProfile( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign TargetingProfile", exc );
@@ -252,7 +256,7 @@ public class LineItemRestController extends BaseSpringRestController {
 	@PutMapping("/assignDeal")
 	public void assignDeal( @RequestBody AssignDealToLineItemCommand command ) {
 		try {
-			LineItemService.getLineItemInstance().assignDeal( command );   
+			service.assignDeal( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Deal", exc );
@@ -266,7 +270,7 @@ public class LineItemRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignDeal")
 	public void unAssignDeal( @RequestBody(required=true)  UnAssignDealFromLineItemCommand command ) {
 		try {
-			LineItemService.getLineItemInstance().unAssignDeal( command );   
+			service.unAssignDeal( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Deal", exc );
@@ -281,7 +285,7 @@ public class LineItemRestController extends BaseSpringRestController {
 	@PutMapping("/addToPlacements")
 	public void addToPlacements( @RequestBody(required=true) AssignPlacementsToLineItemCommand command ) {
 		try {
-			LineItemService.getLineItemInstance().addToPlacements( command );   
+			service.addToPlacements( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Placements", exc );
@@ -296,7 +300,7 @@ public class LineItemRestController extends BaseSpringRestController {
 	public void removeFromPlacements( 	@RequestBody(required=true) RemovePlacementsFromLineItemCommand command )
 	{		
 		try {
-			LineItemService.getLineItemInstance().removeFromPlacements( command );
+			service.removeFromPlacements( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Placements", exc );
@@ -310,7 +314,7 @@ public class LineItemRestController extends BaseSpringRestController {
 	@PutMapping("/addToCreatives")
 	public void addToCreatives( @RequestBody(required=true) AssignCreativesToLineItemCommand command ) {
 		try {
-			LineItemService.getLineItemInstance().addToCreatives( command );   
+			service.addToCreatives( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Creatives", exc );
@@ -325,7 +329,7 @@ public class LineItemRestController extends BaseSpringRestController {
 	public void removeFromCreatives( 	@RequestBody(required=true) RemoveCreativesFromLineItemCommand command )
 	{		
 		try {
-			LineItemService.getLineItemInstance().removeFromCreatives( command );
+			service.removeFromCreatives( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Creatives", exc );
@@ -339,7 +343,7 @@ public class LineItemRestController extends BaseSpringRestController {
 	@PutMapping("/addToPerformanceMetrics")
 	public void addToPerformanceMetrics( @RequestBody(required=true) AssignPerformanceMetricsToLineItemCommand command ) {
 		try {
-			LineItemService.getLineItemInstance().addToPerformanceMetrics( command );   
+			service.addToPerformanceMetrics( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set PerformanceMetrics", exc );
@@ -354,7 +358,7 @@ public class LineItemRestController extends BaseSpringRestController {
 	public void removeFromPerformanceMetrics( 	@RequestBody(required=true) RemovePerformanceMetricsFromLineItemCommand command )
 	{		
 		try {
-			LineItemService.getLineItemInstance().removeFromPerformanceMetrics( command );
+			service.removeFromPerformanceMetrics( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set PerformanceMetrics", exc );
@@ -368,6 +372,7 @@ public class LineItemRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected LineItem lineItem = null;
-    private static final Logger LOGGER = Logger.getLogger(LineItemRestController.class.getName());
+	protected LineItemService service = null;
+	private static final Logger LOGGER = Logger.getLogger(LineItemRestController.class.getName());
     
 }

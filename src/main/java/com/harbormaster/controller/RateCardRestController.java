@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/RateCard")
 public class RateCardRestController extends BaseSpringRestController {
 
+	public RateCardRestController( RateCardService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a RateCard.  if not key provided, calls create, otherwise calls save
      * @param		RateCard	rateCard
@@ -94,7 +98,7 @@ public class RateCardRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = RateCardService.getRateCardInstance().createRateCard( command );
+			completableFuture = service.createRateCard( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class RateCardRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateRateCardCommand
 			// -----------------------------------------------
-			completableFuture = RateCardService.getRateCardInstance().updateRateCard(command);;
+			completableFuture = service.updateRateCard(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "RateCardController:update() - successfully update RateCard - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class RateCardRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteRateCardCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	RateCardService delegate = RateCardService.getRateCardInstance();
+        	RateCardService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted RateCard with key " + command.getRateCardId() );
@@ -155,7 +159,7 @@ public class RateCardRestController extends BaseSpringRestController {
     	RateCard entity = null;
 
     	try {  
-    		entity = RateCardService.getRateCardInstance().getRateCard( new RateCardFetchOneSummary( uuid ) );   
+    		entity = service.getRateCard( new RateCardFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load RateCard using Id " + uuid );
@@ -175,7 +179,7 @@ public class RateCardRestController extends BaseSpringRestController {
         
     	try {
             // load the RateCard
-            rateCardList = RateCardService.getRateCardInstance().getAllRateCard();
+            rateCardList = service.getAllRateCard();
             
             if ( rateCardList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all RateCards" );
@@ -196,7 +200,7 @@ public class RateCardRestController extends BaseSpringRestController {
 	@PutMapping("/assignPublisher")
 	public void assignPublisher( @RequestBody AssignPublisherToRateCardCommand command ) {
 		try {
-			RateCardService.getRateCardInstance().assignPublisher( command );   
+			service.assignPublisher( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Publisher", exc );
@@ -210,7 +214,7 @@ public class RateCardRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignPublisher")
 	public void unAssignPublisher( @RequestBody(required=true)  UnAssignPublisherFromRateCardCommand command ) {
 		try {
-			RateCardService.getRateCardInstance().unAssignPublisher( command );   
+			service.unAssignPublisher( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Publisher", exc );
@@ -225,7 +229,7 @@ public class RateCardRestController extends BaseSpringRestController {
 	@PutMapping("/addToRates")
 	public void addToRates( @RequestBody(required=true) AssignRatesToRateCardCommand command ) {
 		try {
-			RateCardService.getRateCardInstance().addToRates( command );   
+			service.addToRates( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Rates", exc );
@@ -240,7 +244,7 @@ public class RateCardRestController extends BaseSpringRestController {
 	public void removeFromRates( 	@RequestBody(required=true) RemoveRatesFromRateCardCommand command )
 	{		
 		try {
-			RateCardService.getRateCardInstance().removeFromRates( command );
+			service.removeFromRates( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Rates", exc );
@@ -254,6 +258,7 @@ public class RateCardRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected RateCard rateCard = null;
-    private static final Logger LOGGER = Logger.getLogger(RateCardRestController.class.getName());
+	protected RateCardService service = null;
+	private static final Logger LOGGER = Logger.getLogger(RateCardRestController.class.getName());
     
 }

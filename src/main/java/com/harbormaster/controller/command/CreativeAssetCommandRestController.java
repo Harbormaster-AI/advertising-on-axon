@@ -100,7 +100,6 @@ public class CreativeAssetCommandRestController extends BaseSpringRestController
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateCreativeAssetCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createCreativeAsset( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class CreativeAssetCommandRestController extends BaseSpringRestController
 		DeleteCreativeAssetCommand command = new DeleteCreativeAssetCommand( creativeAssetId );
 
     	try {
-        	CreativeAssetService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted CreativeAsset with key " + command.getCreativeAssetId() );
         }
         catch( Throwable exc ) {

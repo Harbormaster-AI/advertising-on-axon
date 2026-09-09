@@ -100,7 +100,6 @@ public class PerformanceMetricCommandRestController extends BaseSpringRestContro
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreatePerformanceMetricCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createPerformanceMetric( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class PerformanceMetricCommandRestController extends BaseSpringRestContro
 		DeletePerformanceMetricCommand command = new DeletePerformanceMetricCommand( performanceMetricId );
 
     	try {
-        	PerformanceMetricService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted PerformanceMetric with key " + command.getPerformanceMetricId() );
         }
         catch( Throwable exc ) {

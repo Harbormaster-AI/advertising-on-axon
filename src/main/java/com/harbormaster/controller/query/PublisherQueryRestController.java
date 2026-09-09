@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/PublisherQuery")
 public class PublisherQueryRestController extends BaseSpringRestController {
 	
+	public PublisherQueryRestController( PublisherService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a Publisher using a UUID
      * @param		UUID publisherId
@@ -95,7 +99,7 @@ public class PublisherQueryRestController extends BaseSpringRestController {
     	Publisher entity = null;
 
     	try {  
-    		entity = PublisherService.getPublisherInstance().getPublisher( new PublisherFetchOneSummary( publisherId ) );
+    		entity = service.getPublisher( new PublisherFetchOneSummary( publisherId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Publisher using Id " + publisherId );
@@ -115,7 +119,7 @@ public class PublisherQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the Publisher
-            publisherList = PublisherService.getPublisherInstance().getAllPublisher();
+            publisherList = service.getAllPublisher();
             
             if ( publisherList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Publishers" );
@@ -135,6 +139,7 @@ public class PublisherQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Publisher publisher = null;
+    protected PublisherService service = null;
     private static final Logger LOGGER = Logger.getLogger(PublisherQueryRestController.class.getName());
     
 }

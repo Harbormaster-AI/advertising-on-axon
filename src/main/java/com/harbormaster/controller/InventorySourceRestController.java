@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/InventorySource")
 public class InventorySourceRestController extends BaseSpringRestController {
 
+	public InventorySourceRestController( InventorySourceService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a InventorySource.  if not key provided, calls create, otherwise calls save
      * @param		InventorySource	inventorySource
@@ -94,7 +98,7 @@ public class InventorySourceRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = InventorySourceService.getInventorySourceInstance().createInventorySource( command );
+			completableFuture = service.createInventorySource( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class InventorySourceRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateInventorySourceCommand
 			// -----------------------------------------------
-			completableFuture = InventorySourceService.getInventorySourceInstance().updateInventorySource(command);;
+			completableFuture = service.updateInventorySource(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "InventorySourceController:update() - successfully update InventorySource - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class InventorySourceRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteInventorySourceCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	InventorySourceService delegate = InventorySourceService.getInventorySourceInstance();
+        	InventorySourceService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted InventorySource with key " + command.getInventorySourceId() );
@@ -155,7 +159,7 @@ public class InventorySourceRestController extends BaseSpringRestController {
     	InventorySource entity = null;
 
     	try {  
-    		entity = InventorySourceService.getInventorySourceInstance().getInventorySource( new InventorySourceFetchOneSummary( uuid ) );   
+    		entity = service.getInventorySource( new InventorySourceFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load InventorySource using Id " + uuid );
@@ -175,7 +179,7 @@ public class InventorySourceRestController extends BaseSpringRestController {
         
     	try {
             // load the InventorySource
-            inventorySourceList = InventorySourceService.getInventorySourceInstance().getAllInventorySource();
+            inventorySourceList = service.getAllInventorySource();
             
             if ( inventorySourceList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all InventorySources" );
@@ -196,7 +200,7 @@ public class InventorySourceRestController extends BaseSpringRestController {
 	@PutMapping("/assignPublisher")
 	public void assignPublisher( @RequestBody AssignPublisherToInventorySourceCommand command ) {
 		try {
-			InventorySourceService.getInventorySourceInstance().assignPublisher( command );   
+			service.assignPublisher( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Publisher", exc );
@@ -210,7 +214,7 @@ public class InventorySourceRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignPublisher")
 	public void unAssignPublisher( @RequestBody(required=true)  UnAssignPublisherFromInventorySourceCommand command ) {
 		try {
-			InventorySourceService.getInventorySourceInstance().unAssignPublisher( command );   
+			service.unAssignPublisher( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Publisher", exc );
@@ -225,7 +229,7 @@ public class InventorySourceRestController extends BaseSpringRestController {
 	@PutMapping("/addToAdSlots")
 	public void addToAdSlots( @RequestBody(required=true) AssignAdSlotsToInventorySourceCommand command ) {
 		try {
-			InventorySourceService.getInventorySourceInstance().addToAdSlots( command );   
+			service.addToAdSlots( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set AdSlots", exc );
@@ -240,7 +244,7 @@ public class InventorySourceRestController extends BaseSpringRestController {
 	public void removeFromAdSlots( 	@RequestBody(required=true) RemoveAdSlotsFromInventorySourceCommand command )
 	{		
 		try {
-			InventorySourceService.getInventorySourceInstance().removeFromAdSlots( command );
+			service.removeFromAdSlots( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set AdSlots", exc );
@@ -254,7 +258,7 @@ public class InventorySourceRestController extends BaseSpringRestController {
 	@PutMapping("/addToDeals")
 	public void addToDeals( @RequestBody(required=true) AssignDealsToInventorySourceCommand command ) {
 		try {
-			InventorySourceService.getInventorySourceInstance().addToDeals( command );   
+			service.addToDeals( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Deals", exc );
@@ -269,7 +273,7 @@ public class InventorySourceRestController extends BaseSpringRestController {
 	public void removeFromDeals( 	@RequestBody(required=true) RemoveDealsFromInventorySourceCommand command )
 	{		
 		try {
-			InventorySourceService.getInventorySourceInstance().removeFromDeals( command );
+			service.removeFromDeals( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Deals", exc );
@@ -283,6 +287,7 @@ public class InventorySourceRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected InventorySource inventorySource = null;
-    private static final Logger LOGGER = Logger.getLogger(InventorySourceRestController.class.getName());
+	protected InventorySourceService service = null;
+	private static final Logger LOGGER = Logger.getLogger(InventorySourceRestController.class.getName());
     
 }

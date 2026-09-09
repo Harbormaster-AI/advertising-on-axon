@@ -90,11 +90,11 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateLineItemEvent</li>
  *      <li>DeleteLineItemEvent</li>
    *       <li>AssignCampaignToLineItemEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignCampaignFromLineItemEvent</li>
   *       <li>AssignTargetingProfileToLineItemEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignTargetingProfileFromLineItemEvent</li>
   *       <li>AssignDealToLineItemEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignDealFromLineItemEvent</li>
    *       <li>AssignPlacementsToLineItemEvent</li>
  *       <li>RemovePlacementsFromLineItemEvent</li>
   *       <li>AssignCreativesToLineItemEvent</li>

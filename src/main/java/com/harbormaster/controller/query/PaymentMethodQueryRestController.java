@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/PaymentMethodQuery")
 public class PaymentMethodQueryRestController extends BaseSpringRestController {
 	
+	public PaymentMethodQueryRestController( PaymentMethodService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a PaymentMethod using a UUID
      * @param		UUID paymentMethodId
@@ -95,7 +99,7 @@ public class PaymentMethodQueryRestController extends BaseSpringRestController {
     	PaymentMethod entity = null;
 
     	try {  
-    		entity = PaymentMethodService.getPaymentMethodInstance().getPaymentMethod( new PaymentMethodFetchOneSummary( paymentMethodId ) );
+    		entity = service.getPaymentMethod( new PaymentMethodFetchOneSummary( paymentMethodId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load PaymentMethod using Id " + paymentMethodId );
@@ -115,7 +119,7 @@ public class PaymentMethodQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the PaymentMethod
-            paymentMethodList = PaymentMethodService.getPaymentMethodInstance().getAllPaymentMethod();
+            paymentMethodList = service.getAllPaymentMethod();
             
             if ( paymentMethodList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all PaymentMethods" );
@@ -135,6 +139,7 @@ public class PaymentMethodQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected PaymentMethod paymentMethod = null;
+    protected PaymentMethodService service = null;
     private static final Logger LOGGER = Logger.getLogger(PaymentMethodQueryRestController.class.getName());
     
 }

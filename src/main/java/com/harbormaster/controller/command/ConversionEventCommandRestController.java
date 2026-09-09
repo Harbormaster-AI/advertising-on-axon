@@ -100,7 +100,6 @@ public class ConversionEventCommandRestController extends BaseSpringRestControll
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateConversionEventCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createConversionEvent( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class ConversionEventCommandRestController extends BaseSpringRestControll
 		DeleteConversionEventCommand command = new DeleteConversionEventCommand( conversionEventId );
 
     	try {
-        	ConversionEventService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted ConversionEvent with key " + command.getConversionEventId() );
         }
         catch( Throwable exc ) {

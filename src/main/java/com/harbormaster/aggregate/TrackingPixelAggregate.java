@@ -74,9 +74,9 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateTrackingPixelEvent</li>
  *      <li>DeleteTrackingPixelEvent</li>
    *       <li>AssignCampaignToTrackingPixelEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignCampaignFromTrackingPixelEvent</li>
   *       <li>AssignAdvertiserToTrackingPixelEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignAdvertiserFromTrackingPixelEvent</li>
    *       <li>AssignConversionEventsToTrackingPixelEvent</li>
  *       <li>RemoveConversionEventsFromTrackingPixelEvent</li>
   *        </ul>

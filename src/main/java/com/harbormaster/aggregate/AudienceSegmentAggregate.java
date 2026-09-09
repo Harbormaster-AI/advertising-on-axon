@@ -72,7 +72,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateAudienceSegmentEvent</li>
  *      <li>DeleteAudienceSegmentEvent</li>
    *       <li>AssignProviderToAudienceSegmentEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignProviderFromAudienceSegmentEvent</li>
    *       <li>AssignCampaignsToAudienceSegmentEvent</li>
  *       <li>RemoveCampaignsFromAudienceSegmentEvent</li>
   *        </ul>
@@ -221,7 +221,7 @@ public class AudienceSegmentAggregate {
     private UUID audienceSegmentId;
     
     private String name;
-    private Integer estimatedReach;
+    private int estimatedReach;
     private String description;
     private DataProviderType providerType;
     private DataProvider provider = null;

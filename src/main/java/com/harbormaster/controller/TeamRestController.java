@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Team")
 public class TeamRestController extends BaseSpringRestController {
 
+	public TeamRestController( TeamService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a Team.  if not key provided, calls create, otherwise calls save
      * @param		Team	team
@@ -94,7 +98,7 @@ public class TeamRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = TeamService.getTeamInstance().createTeam( command );
+			completableFuture = service.createTeam( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class TeamRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateTeamCommand
 			// -----------------------------------------------
-			completableFuture = TeamService.getTeamInstance().updateTeam(command);;
+			completableFuture = service.updateTeam(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "TeamController:update() - successfully update Team - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class TeamRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteTeamCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	TeamService delegate = TeamService.getTeamInstance();
+        	TeamService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Team with key " + command.getTeamId() );
@@ -155,7 +159,7 @@ public class TeamRestController extends BaseSpringRestController {
     	Team entity = null;
 
     	try {  
-    		entity = TeamService.getTeamInstance().getTeam( new TeamFetchOneSummary( uuid ) );   
+    		entity = service.getTeam( new TeamFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Team using Id " + uuid );
@@ -175,7 +179,7 @@ public class TeamRestController extends BaseSpringRestController {
         
     	try {
             // load the Team
-            teamList = TeamService.getTeamInstance().getAllTeam();
+            teamList = service.getAllTeam();
             
             if ( teamList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Teams" );
@@ -196,7 +200,7 @@ public class TeamRestController extends BaseSpringRestController {
 	@PutMapping("/assignAgency")
 	public void assignAgency( @RequestBody AssignAgencyToTeamCommand command ) {
 		try {
-			TeamService.getTeamInstance().assignAgency( command );   
+			service.assignAgency( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Agency", exc );
@@ -210,7 +214,7 @@ public class TeamRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAgency")
 	public void unAssignAgency( @RequestBody(required=true)  UnAssignAgencyFromTeamCommand command ) {
 		try {
-			TeamService.getTeamInstance().unAssignAgency( command );   
+			service.unAssignAgency( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Agency", exc );
@@ -225,7 +229,7 @@ public class TeamRestController extends BaseSpringRestController {
 	@PutMapping("/addToUsers")
 	public void addToUsers( @RequestBody(required=true) AssignUsersToTeamCommand command ) {
 		try {
-			TeamService.getTeamInstance().addToUsers( command );   
+			service.addToUsers( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Users", exc );
@@ -240,7 +244,7 @@ public class TeamRestController extends BaseSpringRestController {
 	public void removeFromUsers( 	@RequestBody(required=true) RemoveUsersFromTeamCommand command )
 	{		
 		try {
-			TeamService.getTeamInstance().removeFromUsers( command );
+			service.removeFromUsers( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Users", exc );
@@ -254,7 +258,7 @@ public class TeamRestController extends BaseSpringRestController {
 	@PutMapping("/addToAdAccounts")
 	public void addToAdAccounts( @RequestBody(required=true) AssignAdAccountsToTeamCommand command ) {
 		try {
-			TeamService.getTeamInstance().addToAdAccounts( command );   
+			service.addToAdAccounts( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set AdAccounts", exc );
@@ -269,7 +273,7 @@ public class TeamRestController extends BaseSpringRestController {
 	public void removeFromAdAccounts( 	@RequestBody(required=true) RemoveAdAccountsFromTeamCommand command )
 	{		
 		try {
-			TeamService.getTeamInstance().removeFromAdAccounts( command );
+			service.removeFromAdAccounts( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set AdAccounts", exc );
@@ -283,6 +287,7 @@ public class TeamRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Team team = null;
-    private static final Logger LOGGER = Logger.getLogger(TeamRestController.class.getName());
+	protected TeamService service = null;
+	private static final Logger LOGGER = Logger.getLogger(TeamRestController.class.getName());
     
 }

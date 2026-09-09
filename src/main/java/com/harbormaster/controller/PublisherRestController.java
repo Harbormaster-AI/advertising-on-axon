@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Publisher")
 public class PublisherRestController extends BaseSpringRestController {
 
+	public PublisherRestController( PublisherService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a Publisher.  if not key provided, calls create, otherwise calls save
      * @param		Publisher	publisher
@@ -94,7 +98,7 @@ public class PublisherRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = PublisherService.getPublisherInstance().createPublisher( command );
+			completableFuture = service.createPublisher( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class PublisherRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdatePublisherCommand
 			// -----------------------------------------------
-			completableFuture = PublisherService.getPublisherInstance().updatePublisher(command);;
+			completableFuture = service.updatePublisher(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "PublisherController:update() - successfully update Publisher - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class PublisherRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeletePublisherCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	PublisherService delegate = PublisherService.getPublisherInstance();
+        	PublisherService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Publisher with key " + command.getPublisherId() );
@@ -155,7 +159,7 @@ public class PublisherRestController extends BaseSpringRestController {
     	Publisher entity = null;
 
     	try {  
-    		entity = PublisherService.getPublisherInstance().getPublisher( new PublisherFetchOneSummary( uuid ) );   
+    		entity = service.getPublisher( new PublisherFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Publisher using Id " + uuid );
@@ -175,7 +179,7 @@ public class PublisherRestController extends BaseSpringRestController {
         
     	try {
             // load the Publisher
-            publisherList = PublisherService.getPublisherInstance().getAllPublisher();
+            publisherList = service.getAllPublisher();
             
             if ( publisherList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Publishers" );
@@ -197,7 +201,7 @@ public class PublisherRestController extends BaseSpringRestController {
 	@PutMapping("/addToInventorySources")
 	public void addToInventorySources( @RequestBody(required=true) AssignInventorySourcesToPublisherCommand command ) {
 		try {
-			PublisherService.getPublisherInstance().addToInventorySources( command );   
+			service.addToInventorySources( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set InventorySources", exc );
@@ -212,7 +216,7 @@ public class PublisherRestController extends BaseSpringRestController {
 	public void removeFromInventorySources( 	@RequestBody(required=true) RemoveInventorySourcesFromPublisherCommand command )
 	{		
 		try {
-			PublisherService.getPublisherInstance().removeFromInventorySources( command );
+			service.removeFromInventorySources( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set InventorySources", exc );
@@ -226,7 +230,7 @@ public class PublisherRestController extends BaseSpringRestController {
 	@PutMapping("/addToDeals")
 	public void addToDeals( @RequestBody(required=true) AssignDealsToPublisherCommand command ) {
 		try {
-			PublisherService.getPublisherInstance().addToDeals( command );   
+			service.addToDeals( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Deals", exc );
@@ -241,7 +245,7 @@ public class PublisherRestController extends BaseSpringRestController {
 	public void removeFromDeals( 	@RequestBody(required=true) RemoveDealsFromPublisherCommand command )
 	{		
 		try {
-			PublisherService.getPublisherInstance().removeFromDeals( command );
+			service.removeFromDeals( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Deals", exc );
@@ -255,7 +259,7 @@ public class PublisherRestController extends BaseSpringRestController {
 	@PutMapping("/addToCreativeApprovals")
 	public void addToCreativeApprovals( @RequestBody(required=true) AssignCreativeApprovalsToPublisherCommand command ) {
 		try {
-			PublisherService.getPublisherInstance().addToCreativeApprovals( command );   
+			service.addToCreativeApprovals( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set CreativeApprovals", exc );
@@ -270,7 +274,7 @@ public class PublisherRestController extends BaseSpringRestController {
 	public void removeFromCreativeApprovals( 	@RequestBody(required=true) RemoveCreativeApprovalsFromPublisherCommand command )
 	{		
 		try {
-			PublisherService.getPublisherInstance().removeFromCreativeApprovals( command );
+			service.removeFromCreativeApprovals( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set CreativeApprovals", exc );
@@ -284,7 +288,7 @@ public class PublisherRestController extends BaseSpringRestController {
 	@PutMapping("/addToInsertionOrders")
 	public void addToInsertionOrders( @RequestBody(required=true) AssignInsertionOrdersToPublisherCommand command ) {
 		try {
-			PublisherService.getPublisherInstance().addToInsertionOrders( command );   
+			service.addToInsertionOrders( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set InsertionOrders", exc );
@@ -299,7 +303,7 @@ public class PublisherRestController extends BaseSpringRestController {
 	public void removeFromInsertionOrders( 	@RequestBody(required=true) RemoveInsertionOrdersFromPublisherCommand command )
 	{		
 		try {
-			PublisherService.getPublisherInstance().removeFromInsertionOrders( command );
+			service.removeFromInsertionOrders( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set InsertionOrders", exc );
@@ -313,7 +317,7 @@ public class PublisherRestController extends BaseSpringRestController {
 	@PutMapping("/addToRateCards")
 	public void addToRateCards( @RequestBody(required=true) AssignRateCardsToPublisherCommand command ) {
 		try {
-			PublisherService.getPublisherInstance().addToRateCards( command );   
+			service.addToRateCards( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set RateCards", exc );
@@ -328,7 +332,7 @@ public class PublisherRestController extends BaseSpringRestController {
 	public void removeFromRateCards( 	@RequestBody(required=true) RemoveRateCardsFromPublisherCommand command )
 	{		
 		try {
-			PublisherService.getPublisherInstance().removeFromRateCards( command );
+			service.removeFromRateCards( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set RateCards", exc );
@@ -342,6 +346,7 @@ public class PublisherRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Publisher publisher = null;
-    private static final Logger LOGGER = Logger.getLogger(PublisherRestController.class.getName());
+	protected PublisherService service = null;
+	private static final Logger LOGGER = Logger.getLogger(PublisherRestController.class.getName());
     
 }

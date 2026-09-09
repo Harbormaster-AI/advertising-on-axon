@@ -65,7 +65,7 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateCreativeFileEvent</li>
  *      <li>DeleteCreativeFileEvent</li>
    *       <li>AssignCreativeAssetToCreativeFileEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignCreativeAssetFromCreativeFileEvent</li>
    *        </ul>
  *
  * <p>@author Harbormaster Dev Team</p>
@@ -179,7 +179,7 @@ public class CreativeFileAggregate {
     private UUID creativeFileId;
     
     private URL uri;
-    private Integer fileSizeKB;
+    private int fileSizeKB;
     private String mimeType;
     private String checksum;
     private CreativeAsset creativeAsset = null;

@@ -100,7 +100,6 @@ public class AgencyCommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateAgencyCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createAgency( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class AgencyCommandRestController extends BaseSpringRestController {
 		DeleteAgencyCommand command = new DeleteAgencyCommand( agencyId );
 
     	try {
-        	AgencyService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Agency with key " + command.getAgencyId() );
         }
         catch( Throwable exc ) {

@@ -100,7 +100,6 @@ public class RateCardCommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateRateCardCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createRateCard( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class RateCardCommandRestController extends BaseSpringRestController {
 		DeleteRateCardCommand command = new DeleteRateCardCommand( rateCardId );
 
     	try {
-        	RateCardService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted RateCard with key " + command.getRateCardId() );
         }
         catch( Throwable exc ) {

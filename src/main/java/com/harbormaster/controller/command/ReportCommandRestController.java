@@ -100,7 +100,6 @@ public class ReportCommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateReportCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createReport( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class ReportCommandRestController extends BaseSpringRestController {
 		DeleteReportCommand command = new DeleteReportCommand( reportId );
 
     	try {
-        	ReportService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Report with key " + command.getReportId() );
         }
         catch( Throwable exc ) {

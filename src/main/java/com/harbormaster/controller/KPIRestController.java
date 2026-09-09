@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/KPI")
 public class KPIRestController extends BaseSpringRestController {
 
+	public KPIRestController( KPIService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a KPI.  if not key provided, calls create, otherwise calls save
      * @param		KPI	kPI
@@ -94,7 +98,7 @@ public class KPIRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = KPIService.getKPIInstance().createKPI( command );
+			completableFuture = service.createKPI( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class KPIRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateKPICommand
 			// -----------------------------------------------
-			completableFuture = KPIService.getKPIInstance().updateKPI(command);;
+			completableFuture = service.updateKPI(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "KPIController:update() - successfully update KPI - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class KPIRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteKPICommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	KPIService delegate = KPIService.getKPIInstance();
+        	KPIService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted KPI with key " + command.getKPIId() );
@@ -155,7 +159,7 @@ public class KPIRestController extends BaseSpringRestController {
     	KPI entity = null;
 
     	try {  
-    		entity = KPIService.getKPIInstance().getKPI( new KPIFetchOneSummary( uuid ) );   
+    		entity = service.getKPI( new KPIFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load KPI using Id " + uuid );
@@ -175,7 +179,7 @@ public class KPIRestController extends BaseSpringRestController {
         
     	try {
             // load the KPI
-            kPIList = KPIService.getKPIInstance().getAllKPI();
+            kPIList = service.getAllKPI();
             
             if ( kPIList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all KPIs" );
@@ -196,7 +200,7 @@ public class KPIRestController extends BaseSpringRestController {
 	@PutMapping("/assignCampaign")
 	public void assignCampaign( @RequestBody AssignCampaignToKPICommand command ) {
 		try {
-			KPIService.getKPIInstance().assignCampaign( command );   
+			service.assignCampaign( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Campaign", exc );
@@ -210,7 +214,7 @@ public class KPIRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignCampaign")
 	public void unAssignCampaign( @RequestBody(required=true)  UnAssignCampaignFromKPICommand command ) {
 		try {
-			KPIService.getKPIInstance().unAssignCampaign( command );   
+			service.unAssignCampaign( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Campaign", exc );
@@ -225,6 +229,7 @@ public class KPIRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected KPI kPI = null;
-    private static final Logger LOGGER = Logger.getLogger(KPIRestController.class.getName());
+	protected KPIService service = null;
+	private static final Logger LOGGER = Logger.getLogger(KPIRestController.class.getName());
     
 }

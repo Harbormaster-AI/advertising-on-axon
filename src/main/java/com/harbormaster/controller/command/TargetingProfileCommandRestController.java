@@ -100,7 +100,6 @@ public class TargetingProfileCommandRestController extends BaseSpringRestControl
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateTargetingProfileCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createTargetingProfile( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class TargetingProfileCommandRestController extends BaseSpringRestControl
 		DeleteTargetingProfileCommand command = new DeleteTargetingProfileCommand( targetingProfileId );
 
     	try {
-        	TargetingProfileService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted TargetingProfile with key " + command.getTargetingProfileId() );
         }
         catch( Throwable exc ) {

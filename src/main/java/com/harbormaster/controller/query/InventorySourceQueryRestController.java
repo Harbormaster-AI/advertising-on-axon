@@ -85,6 +85,10 @@ import com.harbormaster.controller.*;
 @RequestMapping("/InventorySourceQuery")
 public class InventorySourceQueryRestController extends BaseSpringRestController {
 	
+	public InventorySourceQueryRestController( InventorySourceService service ) {
+        this.service = service;
+    }
+    
     /**
      * Handles loading a InventorySource using a UUID
      * @param		UUID inventorySourceId
@@ -95,7 +99,7 @@ public class InventorySourceQueryRestController extends BaseSpringRestController
     	InventorySource entity = null;
 
     	try {  
-    		entity = InventorySourceService.getInventorySourceInstance().getInventorySource( new InventorySourceFetchOneSummary( inventorySourceId ) );
+    		entity = service.getInventorySource( new InventorySourceFetchOneSummary( inventorySourceId ) );
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load InventorySource using Id " + inventorySourceId );
@@ -115,7 +119,7 @@ public class InventorySourceQueryRestController extends BaseSpringRestController
         
     	try {
             // load the InventorySource
-            inventorySourceList = InventorySourceService.getInventorySourceInstance().getAllInventorySource();
+            inventorySourceList = service.getAllInventorySource();
             
             if ( inventorySourceList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all InventorySources" );
@@ -135,6 +139,7 @@ public class InventorySourceQueryRestController extends BaseSpringRestController
 // Attributes
 //************************************************************************
     protected InventorySource inventorySource = null;
+    protected InventorySourceService service = null;
     private static final Logger LOGGER = Logger.getLogger(InventorySourceQueryRestController.class.getName());
     
 }

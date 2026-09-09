@@ -321,9 +321,9 @@ public class CreativeAssetAggregate {
     private String name;
     private URL clickUrl;
     private URL landingPage;
-    private Integer width;
-    private Integer height;
-    private Integer durationSeconds;
+    private int width;
+    private int height;
+    private int durationSeconds;
     private CreativeType creativeType;
     private AdFormat adFormat;
     private Set<CreativeFile> files = new HashSet<>();

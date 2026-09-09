@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Deal")
 public class DealRestController extends BaseSpringRestController {
 
+	public DealRestController( DealService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a Deal.  if not key provided, calls create, otherwise calls save
      * @param		Deal	deal
@@ -94,7 +98,7 @@ public class DealRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = DealService.getDealInstance().createDeal( command );
+			completableFuture = service.createDeal( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class DealRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateDealCommand
 			// -----------------------------------------------
-			completableFuture = DealService.getDealInstance().updateDeal(command);;
+			completableFuture = service.updateDeal(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "DealController:update() - successfully update Deal - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class DealRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteDealCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	DealService delegate = DealService.getDealInstance();
+        	DealService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Deal with key " + command.getDealId() );
@@ -155,7 +159,7 @@ public class DealRestController extends BaseSpringRestController {
     	Deal entity = null;
 
     	try {  
-    		entity = DealService.getDealInstance().getDeal( new DealFetchOneSummary( uuid ) );   
+    		entity = service.getDeal( new DealFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Deal using Id " + uuid );
@@ -175,7 +179,7 @@ public class DealRestController extends BaseSpringRestController {
         
     	try {
             // load the Deal
-            dealList = DealService.getDealInstance().getAllDeal();
+            dealList = service.getAllDeal();
             
             if ( dealList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Deals" );
@@ -196,7 +200,7 @@ public class DealRestController extends BaseSpringRestController {
 	@PutMapping("/assignPublisher")
 	public void assignPublisher( @RequestBody AssignPublisherToDealCommand command ) {
 		try {
-			DealService.getDealInstance().assignPublisher( command );   
+			service.assignPublisher( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Publisher", exc );
@@ -210,7 +214,7 @@ public class DealRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignPublisher")
 	public void unAssignPublisher( @RequestBody(required=true)  UnAssignPublisherFromDealCommand command ) {
 		try {
-			DealService.getDealInstance().unAssignPublisher( command );   
+			service.unAssignPublisher( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Publisher", exc );
@@ -225,7 +229,7 @@ public class DealRestController extends BaseSpringRestController {
 	@PutMapping("/addToInventorySources")
 	public void addToInventorySources( @RequestBody(required=true) AssignInventorySourcesToDealCommand command ) {
 		try {
-			DealService.getDealInstance().addToInventorySources( command );   
+			service.addToInventorySources( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set InventorySources", exc );
@@ -240,7 +244,7 @@ public class DealRestController extends BaseSpringRestController {
 	public void removeFromInventorySources( 	@RequestBody(required=true) RemoveInventorySourcesFromDealCommand command )
 	{		
 		try {
-			DealService.getDealInstance().removeFromInventorySources( command );
+			service.removeFromInventorySources( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set InventorySources", exc );
@@ -254,7 +258,7 @@ public class DealRestController extends BaseSpringRestController {
 	@PutMapping("/addToPlacements")
 	public void addToPlacements( @RequestBody(required=true) AssignPlacementsToDealCommand command ) {
 		try {
-			DealService.getDealInstance().addToPlacements( command );   
+			service.addToPlacements( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Placements", exc );
@@ -269,7 +273,7 @@ public class DealRestController extends BaseSpringRestController {
 	public void removeFromPlacements( 	@RequestBody(required=true) RemovePlacementsFromDealCommand command )
 	{		
 		try {
-			DealService.getDealInstance().removeFromPlacements( command );
+			service.removeFromPlacements( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Placements", exc );
@@ -283,6 +287,7 @@ public class DealRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Deal deal = null;
-    private static final Logger LOGGER = Logger.getLogger(DealRestController.class.getName());
+	protected DealService service = null;
+	private static final Logger LOGGER = Logger.getLogger(DealRestController.class.getName());
     
 }

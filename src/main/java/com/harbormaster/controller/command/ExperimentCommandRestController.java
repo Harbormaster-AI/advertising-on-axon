@@ -100,7 +100,6 @@ public class ExperimentCommandRestController extends BaseSpringRestController {
     public CompletableFuture<UUID> create( @RequestBody(required=true) CreateExperimentCommand command ) {
 		CompletableFuture<UUID> completableFuture = null;
 		try {
-
 			completableFuture = service.createExperiment( command );
         }
         catch( Throwable exc ) {
@@ -142,9 +141,7 @@ public class ExperimentCommandRestController extends BaseSpringRestController {
 		DeleteExperimentCommand command = new DeleteExperimentCommand( experimentId );
 
     	try {
-        	ExperimentService delegate = service;
-
-        	completableFuture = delegate.delete( command );
+        	completableFuture = service.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Experiment with key " + command.getExperimentId() );
         }
         catch( Throwable exc ) {

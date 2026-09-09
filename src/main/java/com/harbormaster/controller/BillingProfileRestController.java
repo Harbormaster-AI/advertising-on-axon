@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/BillingProfile")
 public class BillingProfileRestController extends BaseSpringRestController {
 
+	public BillingProfileRestController( BillingProfileService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a BillingProfile.  if not key provided, calls create, otherwise calls save
      * @param		BillingProfile	billingProfile
@@ -94,7 +98,7 @@ public class BillingProfileRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = BillingProfileService.getBillingProfileInstance().createBillingProfile( command );
+			completableFuture = service.createBillingProfile( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class BillingProfileRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateBillingProfileCommand
 			// -----------------------------------------------
-			completableFuture = BillingProfileService.getBillingProfileInstance().updateBillingProfile(command);;
+			completableFuture = service.updateBillingProfile(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "BillingProfileController:update() - successfully update BillingProfile - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class BillingProfileRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteBillingProfileCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	BillingProfileService delegate = BillingProfileService.getBillingProfileInstance();
+        	BillingProfileService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted BillingProfile with key " + command.getBillingProfileId() );
@@ -155,7 +159,7 @@ public class BillingProfileRestController extends BaseSpringRestController {
     	BillingProfile entity = null;
 
     	try {  
-    		entity = BillingProfileService.getBillingProfileInstance().getBillingProfile( new BillingProfileFetchOneSummary( uuid ) );   
+    		entity = service.getBillingProfile( new BillingProfileFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load BillingProfile using Id " + uuid );
@@ -175,7 +179,7 @@ public class BillingProfileRestController extends BaseSpringRestController {
         
     	try {
             // load the BillingProfile
-            billingProfileList = BillingProfileService.getBillingProfileInstance().getAllBillingProfile();
+            billingProfileList = service.getAllBillingProfile();
             
             if ( billingProfileList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all BillingProfiles" );
@@ -196,7 +200,7 @@ public class BillingProfileRestController extends BaseSpringRestController {
 	@PutMapping("/assignAdvertiser")
 	public void assignAdvertiser( @RequestBody AssignAdvertiserToBillingProfileCommand command ) {
 		try {
-			BillingProfileService.getBillingProfileInstance().assignAdvertiser( command );   
+			service.assignAdvertiser( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Advertiser", exc );
@@ -210,7 +214,7 @@ public class BillingProfileRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAdvertiser")
 	public void unAssignAdvertiser( @RequestBody(required=true)  UnAssignAdvertiserFromBillingProfileCommand command ) {
 		try {
-			BillingProfileService.getBillingProfileInstance().unAssignAdvertiser( command );   
+			service.unAssignAdvertiser( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Advertiser", exc );
@@ -225,7 +229,7 @@ public class BillingProfileRestController extends BaseSpringRestController {
 	@PutMapping("/addToPaymentMethods")
 	public void addToPaymentMethods( @RequestBody(required=true) AssignPaymentMethodsToBillingProfileCommand command ) {
 		try {
-			BillingProfileService.getBillingProfileInstance().addToPaymentMethods( command );   
+			service.addToPaymentMethods( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set PaymentMethods", exc );
@@ -240,7 +244,7 @@ public class BillingProfileRestController extends BaseSpringRestController {
 	public void removeFromPaymentMethods( 	@RequestBody(required=true) RemovePaymentMethodsFromBillingProfileCommand command )
 	{		
 		try {
-			BillingProfileService.getBillingProfileInstance().removeFromPaymentMethods( command );
+			service.removeFromPaymentMethods( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set PaymentMethods", exc );
@@ -254,7 +258,7 @@ public class BillingProfileRestController extends BaseSpringRestController {
 	@PutMapping("/addToAdAccounts")
 	public void addToAdAccounts( @RequestBody(required=true) AssignAdAccountsToBillingProfileCommand command ) {
 		try {
-			BillingProfileService.getBillingProfileInstance().addToAdAccounts( command );   
+			service.addToAdAccounts( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set AdAccounts", exc );
@@ -269,7 +273,7 @@ public class BillingProfileRestController extends BaseSpringRestController {
 	public void removeFromAdAccounts( 	@RequestBody(required=true) RemoveAdAccountsFromBillingProfileCommand command )
 	{		
 		try {
-			BillingProfileService.getBillingProfileInstance().removeFromAdAccounts( command );
+			service.removeFromAdAccounts( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set AdAccounts", exc );
@@ -283,6 +287,7 @@ public class BillingProfileRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected BillingProfile billingProfile = null;
-    private static final Logger LOGGER = Logger.getLogger(BillingProfileRestController.class.getName());
+	protected BillingProfileService service = null;
+	private static final Logger LOGGER = Logger.getLogger(BillingProfileRestController.class.getName());
     
 }

@@ -67,9 +67,9 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateCreativeApprovalEvent</li>
  *      <li>DeleteCreativeApprovalEvent</li>
    *       <li>AssignCreativeAssetToCreativeApprovalEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignCreativeAssetFromCreativeApprovalEvent</li>
   *       <li>AssignPublisherToCreativeApprovalEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignPublisherFromCreativeApprovalEvent</li>
    *        </ul>
  *
  * <p>@author Harbormaster Dev Team</p>
@@ -213,7 +213,7 @@ public class CreativeApprovalAggregate {
     private UUID creativeApprovalId;
     
     private String reviewer;
-    private Date reviewedAt;
+    private  Date reviewedAt;
     private CreativeApprovalStatus status;
     private CreativeAsset creativeAsset = null;
     private Publisher publisher = null;

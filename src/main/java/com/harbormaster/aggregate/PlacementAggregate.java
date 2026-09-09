@@ -69,11 +69,11 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdatePlacementEvent</li>
  *      <li>DeletePlacementEvent</li>
    *       <li>AssignLineItemToPlacementEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignLineItemFromPlacementEvent</li>
   *       <li>AssignAdSlotToPlacementEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignAdSlotFromPlacementEvent</li>
   *       <li>AssignDealToPlacementEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignDealFromPlacementEvent</li>
    *        </ul>
  *
  * <p>@author Harbormaster Dev Team</p>
@@ -250,7 +250,7 @@ public class PlacementAggregate {
     
     private String name;
     private DateRange flight;
-    private Integer goalImpressions;
+    private int goalImpressions;
     private LineItem lineItem = null;
     private AdSlot adSlot = null;
     private Deal deal = null;

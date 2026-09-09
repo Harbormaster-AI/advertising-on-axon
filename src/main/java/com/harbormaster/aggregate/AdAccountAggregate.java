@@ -90,11 +90,11 @@ import org.springframework.context.annotation.Profile;
  *      <li>UpdateAdAccountEvent</li>
  *      <li>DeleteAdAccountEvent</li>
    *       <li>AssignAdvertiserToAdAccountEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignAdvertiserFromAdAccountEvent</li>
   *       <li>AssignBillingProfileToAdAccountEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignBillingProfileFromAdAccountEvent</li>
   *       <li>AssignDspToAdAccountEvent</li>
- *       $<li>{singleAssociation.getUnAssignFromEventAlias()}</li>
+ *       <li>UnAssignDspFromAdAccountEvent</li>
    *       <li>AssignUsersToAdAccountEvent</li>
  *       <li>RemoveUsersFromAdAccountEvent</li>
   *       <li>AssignCampaignsToAdAccountEvent</li>

@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/ContentCategory")
 public class ContentCategoryRestController extends BaseSpringRestController {
 
+	public ContentCategoryRestController( ContentCategoryService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a ContentCategory.  if not key provided, calls create, otherwise calls save
      * @param		ContentCategory	contentCategory
@@ -94,7 +98,7 @@ public class ContentCategoryRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = ContentCategoryService.getContentCategoryInstance().createContentCategory( command );
+			completableFuture = service.createContentCategory( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class ContentCategoryRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateContentCategoryCommand
 			// -----------------------------------------------
-			completableFuture = ContentCategoryService.getContentCategoryInstance().updateContentCategory(command);;
+			completableFuture = service.updateContentCategory(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "ContentCategoryController:update() - successfully update ContentCategory - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class ContentCategoryRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteContentCategoryCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	ContentCategoryService delegate = ContentCategoryService.getContentCategoryInstance();
+        	ContentCategoryService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted ContentCategory with key " + command.getContentCategoryId() );
@@ -155,7 +159,7 @@ public class ContentCategoryRestController extends BaseSpringRestController {
     	ContentCategory entity = null;
 
     	try {  
-    		entity = ContentCategoryService.getContentCategoryInstance().getContentCategory( new ContentCategoryFetchOneSummary( uuid ) );   
+    		entity = service.getContentCategory( new ContentCategoryFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load ContentCategory using Id " + uuid );
@@ -175,7 +179,7 @@ public class ContentCategoryRestController extends BaseSpringRestController {
         
     	try {
             // load the ContentCategory
-            contentCategoryList = ContentCategoryService.getContentCategoryInstance().getAllContentCategory();
+            contentCategoryList = service.getAllContentCategory();
             
             if ( contentCategoryList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all ContentCategorys" );
@@ -197,6 +201,7 @@ public class ContentCategoryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected ContentCategory contentCategory = null;
-    private static final Logger LOGGER = Logger.getLogger(ContentCategoryRestController.class.getName());
+	protected ContentCategoryService service = null;
+	private static final Logger LOGGER = Logger.getLogger(ContentCategoryRestController.class.getName());
     
 }

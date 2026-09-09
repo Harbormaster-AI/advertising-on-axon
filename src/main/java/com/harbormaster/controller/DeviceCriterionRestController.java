@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/DeviceCriterion")
 public class DeviceCriterionRestController extends BaseSpringRestController {
 
+	public DeviceCriterionRestController( DeviceCriterionService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a DeviceCriterion.  if not key provided, calls create, otherwise calls save
      * @param		DeviceCriterion	deviceCriterion
@@ -94,7 +98,7 @@ public class DeviceCriterionRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = DeviceCriterionService.getDeviceCriterionInstance().createDeviceCriterion( command );
+			completableFuture = service.createDeviceCriterion( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class DeviceCriterionRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateDeviceCriterionCommand
 			// -----------------------------------------------
-			completableFuture = DeviceCriterionService.getDeviceCriterionInstance().updateDeviceCriterion(command);;
+			completableFuture = service.updateDeviceCriterion(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "DeviceCriterionController:update() - successfully update DeviceCriterion - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class DeviceCriterionRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteDeviceCriterionCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	DeviceCriterionService delegate = DeviceCriterionService.getDeviceCriterionInstance();
+        	DeviceCriterionService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted DeviceCriterion with key " + command.getDeviceCriterionId() );
@@ -155,7 +159,7 @@ public class DeviceCriterionRestController extends BaseSpringRestController {
     	DeviceCriterion entity = null;
 
     	try {  
-    		entity = DeviceCriterionService.getDeviceCriterionInstance().getDeviceCriterion( new DeviceCriterionFetchOneSummary( uuid ) );   
+    		entity = service.getDeviceCriterion( new DeviceCriterionFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load DeviceCriterion using Id " + uuid );
@@ -175,7 +179,7 @@ public class DeviceCriterionRestController extends BaseSpringRestController {
         
     	try {
             // load the DeviceCriterion
-            deviceCriterionList = DeviceCriterionService.getDeviceCriterionInstance().getAllDeviceCriterion();
+            deviceCriterionList = service.getAllDeviceCriterion();
             
             if ( deviceCriterionList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all DeviceCriterions" );
@@ -196,7 +200,7 @@ public class DeviceCriterionRestController extends BaseSpringRestController {
 	@PutMapping("/assignTargetingProfile")
 	public void assignTargetingProfile( @RequestBody AssignTargetingProfileToDeviceCriterionCommand command ) {
 		try {
-			DeviceCriterionService.getDeviceCriterionInstance().assignTargetingProfile( command );   
+			service.assignTargetingProfile( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign TargetingProfile", exc );
@@ -210,7 +214,7 @@ public class DeviceCriterionRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignTargetingProfile")
 	public void unAssignTargetingProfile( @RequestBody(required=true)  UnAssignTargetingProfileFromDeviceCriterionCommand command ) {
 		try {
-			DeviceCriterionService.getDeviceCriterionInstance().unAssignTargetingProfile( command );   
+			service.unAssignTargetingProfile( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign TargetingProfile", exc );
@@ -225,6 +229,7 @@ public class DeviceCriterionRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected DeviceCriterion deviceCriterion = null;
-    private static final Logger LOGGER = Logger.getLogger(DeviceCriterionRestController.class.getName());
+	protected DeviceCriterionService service = null;
+	private static final Logger LOGGER = Logger.getLogger(DeviceCriterionRestController.class.getName());
     
 }

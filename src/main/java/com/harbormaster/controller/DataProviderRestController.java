@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/DataProvider")
 public class DataProviderRestController extends BaseSpringRestController {
 
+	public DataProviderRestController( DataProviderService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a DataProvider.  if not key provided, calls create, otherwise calls save
      * @param		DataProvider	dataProvider
@@ -94,7 +98,7 @@ public class DataProviderRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = DataProviderService.getDataProviderInstance().createDataProvider( command );
+			completableFuture = service.createDataProvider( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class DataProviderRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateDataProviderCommand
 			// -----------------------------------------------
-			completableFuture = DataProviderService.getDataProviderInstance().updateDataProvider(command);;
+			completableFuture = service.updateDataProvider(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "DataProviderController:update() - successfully update DataProvider - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class DataProviderRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteDataProviderCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	DataProviderService delegate = DataProviderService.getDataProviderInstance();
+        	DataProviderService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted DataProvider with key " + command.getDataProviderId() );
@@ -155,7 +159,7 @@ public class DataProviderRestController extends BaseSpringRestController {
     	DataProvider entity = null;
 
     	try {  
-    		entity = DataProviderService.getDataProviderInstance().getDataProvider( new DataProviderFetchOneSummary( uuid ) );   
+    		entity = service.getDataProvider( new DataProviderFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load DataProvider using Id " + uuid );
@@ -175,7 +179,7 @@ public class DataProviderRestController extends BaseSpringRestController {
         
     	try {
             // load the DataProvider
-            dataProviderList = DataProviderService.getDataProviderInstance().getAllDataProvider();
+            dataProviderList = service.getAllDataProvider();
             
             if ( dataProviderList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all DataProviders" );
@@ -197,7 +201,7 @@ public class DataProviderRestController extends BaseSpringRestController {
 	@PutMapping("/addToAudienceSegments")
 	public void addToAudienceSegments( @RequestBody(required=true) AssignAudienceSegmentsToDataProviderCommand command ) {
 		try {
-			DataProviderService.getDataProviderInstance().addToAudienceSegments( command );   
+			service.addToAudienceSegments( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set AudienceSegments", exc );
@@ -212,7 +216,7 @@ public class DataProviderRestController extends BaseSpringRestController {
 	public void removeFromAudienceSegments( 	@RequestBody(required=true) RemoveAudienceSegmentsFromDataProviderCommand command )
 	{		
 		try {
-			DataProviderService.getDataProviderInstance().removeFromAudienceSegments( command );
+			service.removeFromAudienceSegments( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set AudienceSegments", exc );
@@ -226,6 +230,7 @@ public class DataProviderRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected DataProvider dataProvider = null;
-    private static final Logger LOGGER = Logger.getLogger(DataProviderRestController.class.getName());
+	protected DataProviderService service = null;
+	private static final Logger LOGGER = Logger.getLogger(DataProviderRestController.class.getName());
     
 }

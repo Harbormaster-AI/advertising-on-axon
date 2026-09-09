@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/BrandSafetyPolicy")
 public class BrandSafetyPolicyRestController extends BaseSpringRestController {
 
+	public BrandSafetyPolicyRestController( BrandSafetyPolicyService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a BrandSafetyPolicy.  if not key provided, calls create, otherwise calls save
      * @param		BrandSafetyPolicy	brandSafetyPolicy
@@ -94,7 +98,7 @@ public class BrandSafetyPolicyRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = BrandSafetyPolicyService.getBrandSafetyPolicyInstance().createBrandSafetyPolicy( command );
+			completableFuture = service.createBrandSafetyPolicy( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class BrandSafetyPolicyRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateBrandSafetyPolicyCommand
 			// -----------------------------------------------
-			completableFuture = BrandSafetyPolicyService.getBrandSafetyPolicyInstance().updateBrandSafetyPolicy(command);;
+			completableFuture = service.updateBrandSafetyPolicy(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "BrandSafetyPolicyController:update() - successfully update BrandSafetyPolicy - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class BrandSafetyPolicyRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteBrandSafetyPolicyCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	BrandSafetyPolicyService delegate = BrandSafetyPolicyService.getBrandSafetyPolicyInstance();
+        	BrandSafetyPolicyService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted BrandSafetyPolicy with key " + command.getBrandSafetyPolicyId() );
@@ -155,7 +159,7 @@ public class BrandSafetyPolicyRestController extends BaseSpringRestController {
     	BrandSafetyPolicy entity = null;
 
     	try {  
-    		entity = BrandSafetyPolicyService.getBrandSafetyPolicyInstance().getBrandSafetyPolicy( new BrandSafetyPolicyFetchOneSummary( uuid ) );   
+    		entity = service.getBrandSafetyPolicy( new BrandSafetyPolicyFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load BrandSafetyPolicy using Id " + uuid );
@@ -175,7 +179,7 @@ public class BrandSafetyPolicyRestController extends BaseSpringRestController {
         
     	try {
             // load the BrandSafetyPolicy
-            brandSafetyPolicyList = BrandSafetyPolicyService.getBrandSafetyPolicyInstance().getAllBrandSafetyPolicy();
+            brandSafetyPolicyList = service.getAllBrandSafetyPolicy();
             
             if ( brandSafetyPolicyList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all BrandSafetyPolicys" );
@@ -197,7 +201,7 @@ public class BrandSafetyPolicyRestController extends BaseSpringRestController {
 	@PutMapping("/addToTargetingProfiles")
 	public void addToTargetingProfiles( @RequestBody(required=true) AssignTargetingProfilesToBrandSafetyPolicyCommand command ) {
 		try {
-			BrandSafetyPolicyService.getBrandSafetyPolicyInstance().addToTargetingProfiles( command );   
+			service.addToTargetingProfiles( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set TargetingProfiles", exc );
@@ -212,7 +216,7 @@ public class BrandSafetyPolicyRestController extends BaseSpringRestController {
 	public void removeFromTargetingProfiles( 	@RequestBody(required=true) RemoveTargetingProfilesFromBrandSafetyPolicyCommand command )
 	{		
 		try {
-			BrandSafetyPolicyService.getBrandSafetyPolicyInstance().removeFromTargetingProfiles( command );
+			service.removeFromTargetingProfiles( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set TargetingProfiles", exc );
@@ -226,6 +230,7 @@ public class BrandSafetyPolicyRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected BrandSafetyPolicy brandSafetyPolicy = null;
-    private static final Logger LOGGER = Logger.getLogger(BrandSafetyPolicyRestController.class.getName());
+	protected BrandSafetyPolicyService service = null;
+	private static final Logger LOGGER = Logger.getLogger(BrandSafetyPolicyRestController.class.getName());
     
 }

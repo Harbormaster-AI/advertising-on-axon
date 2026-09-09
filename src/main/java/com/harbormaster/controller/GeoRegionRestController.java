@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/GeoRegion")
 public class GeoRegionRestController extends BaseSpringRestController {
 
+	public GeoRegionRestController( GeoRegionService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a GeoRegion.  if not key provided, calls create, otherwise calls save
      * @param		GeoRegion	geoRegion
@@ -94,7 +98,7 @@ public class GeoRegionRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = GeoRegionService.getGeoRegionInstance().createGeoRegion( command );
+			completableFuture = service.createGeoRegion( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class GeoRegionRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateGeoRegionCommand
 			// -----------------------------------------------
-			completableFuture = GeoRegionService.getGeoRegionInstance().updateGeoRegion(command);;
+			completableFuture = service.updateGeoRegion(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "GeoRegionController:update() - successfully update GeoRegion - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class GeoRegionRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteGeoRegionCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	GeoRegionService delegate = GeoRegionService.getGeoRegionInstance();
+        	GeoRegionService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted GeoRegion with key " + command.getGeoRegionId() );
@@ -155,7 +159,7 @@ public class GeoRegionRestController extends BaseSpringRestController {
     	GeoRegion entity = null;
 
     	try {  
-    		entity = GeoRegionService.getGeoRegionInstance().getGeoRegion( new GeoRegionFetchOneSummary( uuid ) );   
+    		entity = service.getGeoRegion( new GeoRegionFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load GeoRegion using Id " + uuid );
@@ -175,7 +179,7 @@ public class GeoRegionRestController extends BaseSpringRestController {
         
     	try {
             // load the GeoRegion
-            geoRegionList = GeoRegionService.getGeoRegionInstance().getAllGeoRegion();
+            geoRegionList = service.getAllGeoRegion();
             
             if ( geoRegionList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all GeoRegions" );
@@ -196,7 +200,7 @@ public class GeoRegionRestController extends BaseSpringRestController {
 	@PutMapping("/assignParent")
 	public void assignParent( @RequestBody AssignParentToGeoRegionCommand command ) {
 		try {
-			GeoRegionService.getGeoRegionInstance().assignParent( command );   
+			service.assignParent( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Parent", exc );
@@ -210,7 +214,7 @@ public class GeoRegionRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignParent")
 	public void unAssignParent( @RequestBody(required=true)  UnAssignParentFromGeoRegionCommand command ) {
 		try {
-			GeoRegionService.getGeoRegionInstance().unAssignParent( command );   
+			service.unAssignParent( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Parent", exc );
@@ -225,7 +229,7 @@ public class GeoRegionRestController extends BaseSpringRestController {
 	@PutMapping("/addToChildren")
 	public void addToChildren( @RequestBody(required=true) AssignChildrenToGeoRegionCommand command ) {
 		try {
-			GeoRegionService.getGeoRegionInstance().addToChildren( command );   
+			service.addToChildren( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Children", exc );
@@ -240,7 +244,7 @@ public class GeoRegionRestController extends BaseSpringRestController {
 	public void removeFromChildren( 	@RequestBody(required=true) RemoveChildrenFromGeoRegionCommand command )
 	{		
 		try {
-			GeoRegionService.getGeoRegionInstance().removeFromChildren( command );
+			service.removeFromChildren( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Children", exc );
@@ -254,6 +258,7 @@ public class GeoRegionRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected GeoRegion geoRegion = null;
-    private static final Logger LOGGER = Logger.getLogger(GeoRegionRestController.class.getName());
+	protected GeoRegionService service = null;
+	private static final Logger LOGGER = Logger.getLogger(GeoRegionRestController.class.getName());
     
 }

@@ -84,6 +84,10 @@ import com.harbormaster.exception.*;
 @RequestMapping("/AdSlot")
 public class AdSlotRestController extends BaseSpringRestController {
 
+	public AdSlotRestController( AdSlotService service ) {
+		this.service = service;
+	}
+	
     /**
      * Handles create a AdSlot.  if not key provided, calls create, otherwise calls save
      * @param		AdSlot	adSlot
@@ -94,7 +98,7 @@ public class AdSlotRestController extends BaseSpringRestController {
 		CompletableFuture<UUID> completableFuture = null;
 		try {       
         	
-			completableFuture = AdSlotService.getAdSlotInstance().createAdSlot( command );
+			completableFuture = service.createAdSlot( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -115,7 +119,7 @@ public class AdSlotRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateAdSlotCommand
 			// -----------------------------------------------
-			completableFuture = AdSlotService.getAdSlotInstance().updateAdSlot(command);;
+			completableFuture = service.updateAdSlot(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "AdSlotController:update() - successfully update AdSlot - " + exc.getMessage());        	
@@ -133,7 +137,7 @@ public class AdSlotRestController extends BaseSpringRestController {
     public CompletableFuture<Void> delete( @RequestBody(required=true) DeleteAdSlotCommand command ) {                
     	CompletableFuture<Void> completableFuture = null;
     	try {
-        	AdSlotService delegate = AdSlotService.getAdSlotInstance();
+        	AdSlotService delegate = service;
 
         	completableFuture = delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted AdSlot with key " + command.getAdSlotId() );
@@ -155,7 +159,7 @@ public class AdSlotRestController extends BaseSpringRestController {
     	AdSlot entity = null;
 
     	try {  
-    		entity = AdSlotService.getAdSlotInstance().getAdSlot( new AdSlotFetchOneSummary( uuid ) );   
+    		entity = service.getAdSlot( new AdSlotFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load AdSlot using Id " + uuid );
@@ -175,7 +179,7 @@ public class AdSlotRestController extends BaseSpringRestController {
         
     	try {
             // load the AdSlot
-            adSlotList = AdSlotService.getAdSlotInstance().getAllAdSlot();
+            adSlotList = service.getAllAdSlot();
             
             if ( adSlotList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all AdSlots" );
@@ -196,7 +200,7 @@ public class AdSlotRestController extends BaseSpringRestController {
 	@PutMapping("/assignInventorySource")
 	public void assignInventorySource( @RequestBody AssignInventorySourceToAdSlotCommand command ) {
 		try {
-			AdSlotService.getAdSlotInstance().assignInventorySource( command );   
+			service.assignInventorySource( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign InventorySource", exc );
@@ -210,7 +214,7 @@ public class AdSlotRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignInventorySource")
 	public void unAssignInventorySource( @RequestBody(required=true)  UnAssignInventorySourceFromAdSlotCommand command ) {
 		try {
-			AdSlotService.getAdSlotInstance().unAssignInventorySource( command );   
+			service.unAssignInventorySource( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign InventorySource", exc );
@@ -225,7 +229,7 @@ public class AdSlotRestController extends BaseSpringRestController {
 	@PutMapping("/addToPlacements")
 	public void addToPlacements( @RequestBody(required=true) AssignPlacementsToAdSlotCommand command ) {
 		try {
-			AdSlotService.getAdSlotInstance().addToPlacements( command );   
+			service.addToPlacements( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Placements", exc );
@@ -240,7 +244,7 @@ public class AdSlotRestController extends BaseSpringRestController {
 	public void removeFromPlacements( 	@RequestBody(required=true) RemovePlacementsFromAdSlotCommand command )
 	{		
 		try {
-			AdSlotService.getAdSlotInstance().removeFromPlacements( command );
+			service.removeFromPlacements( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Placements", exc );
@@ -254,7 +258,7 @@ public class AdSlotRestController extends BaseSpringRestController {
 	@PutMapping("/addToRates")
 	public void addToRates( @RequestBody(required=true) AssignRatesToAdSlotCommand command ) {
 		try {
-			AdSlotService.getAdSlotInstance().addToRates( command );   
+			service.addToRates( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Rates", exc );
@@ -269,7 +273,7 @@ public class AdSlotRestController extends BaseSpringRestController {
 	public void removeFromRates( 	@RequestBody(required=true) RemoveRatesFromAdSlotCommand command )
 	{		
 		try {
-			AdSlotService.getAdSlotInstance().removeFromRates( command );
+			service.removeFromRates( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Rates", exc );
@@ -283,6 +287,7 @@ public class AdSlotRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected AdSlot adSlot = null;
-    private static final Logger LOGGER = Logger.getLogger(AdSlotRestController.class.getName());
+	protected AdSlotService service = null;
+	private static final Logger LOGGER = Logger.getLogger(AdSlotRestController.class.getName());
     
 }
